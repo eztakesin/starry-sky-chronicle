@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>再起群星：星空合众国编年史</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { background:#04060f; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+    background:#04060f; color:#e8e4d8; font-size:17px; line-height:1.75;
+    min-height:100vh; position:relative; overflow-x:hidden;
+  }
+  body::before {
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.85) 50%, transparent 51%),
+      radial-gradient(1px 1px at 32% 68%, rgba(255,255,255,.6) 50%, transparent 51%),
+      radial-gradient(1.8px 1.8px at 55% 12%, rgba(255,244,214,.9) 50%, transparent 51%),
+      radial-gradient(1px 1px at 71% 41%, rgba(255,255,255,.55) 50%, transparent 51%),
+      radial-gradient(1.3px 1.3px at 86% 77%, rgba(255,255,255,.75) 50%, transparent 51%),
+      radial-gradient(1px 1px at 44% 88%, rgba(255,255,255,.5) 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 93% 18%, rgba(255,255,255,.65) 50%, transparent 51%),
+      radial-gradient(1px 1px at 6% 55%, rgba(255,255,255,.5) 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 63% 93%, rgba(214,232,255,.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 22% 39%, rgba(255,255,255,.45) 50%, transparent 51%),
+      radial-gradient(600px 340px at 80% -60px, rgba(38,58,120,.5), transparent 70%),
+      radial-gradient(520px 300px at 8% 108%, rgba(24,40,92,.45), transparent 70%),
+      linear-gradient(180deg,#04060f 0%,#060a1c 55%,#04060f 100%);
+  }
+  #app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:0 16px calc(28px + env(safe-area-inset-bottom)); }
+  /* ---------- HUD ---------- */
+  #hud { position:sticky; top:0; z-index:5; padding:calc(10px + env(safe-area-inset-top)) 2px 10px;
+         background:linear-gradient(180deg, rgba(4,6,15,.96) 78%, rgba(4,6,15,0)); display:none; }
+  #hud .row { display:flex; align-items:center; gap:8px; margin-bottom:5px; font-size:12.5px; color:#b9b29e; }
+  #hud .lab { width:34px; flex:none; letter-spacing:.08em; }
+  #hud .val { width:26px; flex:none; text-align:right; color:#efe9d6; font-variant-numeric:tabular-nums; }
+  .bar { flex:1; height:6px; border-radius:3px; background:rgba(255,255,255,.10); overflow:hidden; }
+  .bar > i { display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,#8a6d2f,#d8b25c); transition:width .5s ease; }
+  .bar.blue > i { background:linear-gradient(90deg,#2c5d86,#5aa7c9); }
+  #tug { margin-top:8px; }
+  #tug .ends { display:flex; justify-content:space-between; font-size:12.5px; color:#b9b29e; margin-bottom:4px; }
+  #tug .ends b { color:#efe9d6; font-weight:600; font-variant-numeric:tabular-nums; }
+  .tugtrack { position:relative; height:10px; border-radius:5px;
+    background:linear-gradient(90deg,#8a5a2b 0%,#5c4a33 38%,#3d4a55 62%,#2c6d86 100%); }
+  .tugtrack::after { content:""; position:absolute; left:50%; top:-2px; bottom:-2px; width:1px; background:rgba(255,255,255,.35); }
+  #tugptr { position:absolute; top:50%; width:18px; height:18px; border-radius:50%;
+    background:#f2e3b3; border:2px solid #8a6d2f; transform:translate(-50%,-50%);
+    box-shadow:0 0 10px rgba(216,178,92,.8); transition:left .5s ease; }
+  /* ---------- 通用 ---------- */
+  .screen { padding-top:18px; animation:fadein .35s ease; }
+  @keyframes fadein { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
+  h1.title { font-size:31px; line-height:1.35; text-align:center; color:#f2e3b3; letter-spacing:.12em; margin:34px 0 6px; font-weight:700; }
+  .subtitle { text-align:center; color:#9fb4d8; letter-spacing:.34em; font-size:13px; margin-bottom:22px; }
+  .gold { color:#d8b25c; }
+  .card { background:rgba(13,20,42,.88); border:1px solid rgba(216,178,92,.28); border-radius:14px;
+          padding:20px 18px; margin-bottom:16px; box-shadow:0 8px 30px rgba(0,0,0,.45); }
+  .card p { margin-bottom:12px; }
+  .card p:last-child { margin-bottom:0; }
+  .evdate { color:#9fb4d8; font-size:13.5px; letter-spacing:.14em; margin-bottom:2px; }
+  .evtitle { font-size:22px; font-weight:700; color:#f5edd3; margin-bottom:12px; line-height:1.4; }
+  .chntag { display:inline-block; font-size:12px; color:#0a0f22; background:#d8b25c; border-radius:4px;
+            padding:1px 8px; letter-spacing:.15em; margin-bottom:10px; font-weight:700; }
+  .intertag { background:#5aa7c9; }
+  .btn { display:block; width:100%; min-height:52px; border-radius:12px; border:1px solid rgba(216,178,92,.45);
+         background:linear-gradient(180deg, rgba(38,50,92,.92), rgba(22,30,58,.92)); color:#f0e9d2;
+         font-size:16.5px; line-height:1.45; padding:13px 16px; margin-bottom:12px; cursor:pointer; text-align:left;
+         font-family:inherit; transition:transform .08s ease, border-color .15s; }
+  .btn:active { transform:scale(.985); border-color:#d8b25c; }
+  .btn.primary { text-align:center; background:linear-gradient(180deg,#a5813c,#7d5f27); color:#fff8e2; font-weight:700; letter-spacing:.06em; }
+  .btn.ghost { text-align:center; background:rgba(255,255,255,.04); }
+  .btn:disabled { opacity:.42; cursor:not-allowed; }
+  .btn .req { display:block; font-size:12.5px; color:#e0a3a3; margin-top:3px; }
+  .btn .sub { display:block; font-size:13px; color:#a9b6cf; margin-top:3px; }
+  .histmark { color:#d8b25c; letter-spacing:.2em; font-size:13px; }
+  .deltas { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0 4px; }
+  .dchip { font-size:13px; border-radius:20px; padding:2px 11px; border:1px solid rgba(255,255,255,.18); color:#cfd6e4; }
+  .dchip.up { border-color:rgba(120,200,140,.55); color:#9fe0ae; }
+  .dchip.down { border-color:rgba(224,130,130,.55); color:#f0a8a8; }
+  .note { font-size:14px; color:#c9a86a; border-left:3px solid #8a6d2f; padding:6px 0 6px 12px; margin:12px 0 4px; }
+  .center { text-align:center; }
+  .small { font-size:13.5px; color:#98a2b8; }
+  /* ---------- 结局 ---------- */
+  .endtitle { font-size:30px; text-align:center; color:#f2e3b3; letter-spacing:.1em; margin:16px 0 4px; font-weight:700; line-height:1.4; }
+  .endsub { text-align:center; color:#9fb4d8; margin-bottom:16px; letter-spacing:.2em; font-size:13.5px; }
+  .score { text-align:center; margin:10px 0 18px; }
+  .score .num { font-size:52px; color:#d8b25c; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; }
+  .score .lab { font-size:13px; color:#98a2b8; letter-spacing:.3em; }
+  .secttl { font-size:16px; color:#d8b25c; letter-spacing:.18em; margin:20px 0 10px; font-weight:700; }
+  .cmp { border-top:1px solid rgba(255,255,255,.09); padding:10px 0; }
+  .cmp .ch { font-size:13px; color:#9fb4d8; letter-spacing:.12em; margin-bottom:4px; }
+  .cmp .you { color:#efe9d6; }
+  .cmp .hist { color:#98a2b8; font-size:14.5px; }
+  .fate { border-top:1px solid rgba(255,255,255,.09); padding:10px 0; }
+  .fate b { color:#f2e3b3; }
+  #tipbox { display:none; text-align:center; margin:22px 0 6px; }
+  #tipbox .tiplab { font-size:13px; color:#98a2b8; margin-bottom:8px; }
+  #tipbox img { max-width:340px; width:94%; border-radius:10px; border:1px solid rgba(216,178,92,.35); }
+  /* ---------- 标题画 / 视频 ---------- */
+  .hero { position:relative; margin:-18px -16px 4px; height:248px; overflow:hidden; background:#0a1128; }
+  .hero img.still, .hero video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block; }
+  .hero .grad { position:absolute; inset:0; background:linear-gradient(180deg, rgba(4,6,15,.18) 0%, rgba(4,6,15,0) 34%, rgba(4,6,15,.62) 76%, #04060f 100%); }
+  .flagrow { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:2px; }
+  .flagrow .fname { font-size:12px; color:#9fb4d8; letter-spacing:.22em; }
+  svg.flag { border-radius:3px; box-shadow:0 2px 10px rgba(0,0,0,.5); flex:none; }
+  /* ---------- 立绘 ---------- */
+  .portraits { display:flex; gap:10px; margin-bottom:14px; }
+  .portraits .pwrap { flex:1; min-width:0; }
+  .portraits.single .pwrap { flex:none; width:216px; margin:0 auto; }
+  .pimg { width:100%; height:180px; object-fit:cover; object-position:top center; border-radius:12px;
+          border:1px solid rgba(216,178,92,.32); display:block; background:rgba(255,255,255,.04); }
+  .pname { text-align:center; font-size:12.5px; color:#b9b29e; letter-spacing:.3em; margin-top:5px; }
+  /* ---------- 旗帜 ---------- */
+  .flagmark { height:15px; width:auto; border-radius:2px; vertical-align:-2px; margin-right:5px; box-shadow:0 1px 4px rgba(0,0,0,.5); }
+  .chapterflags { display:flex; gap:14px; margin-bottom:16px; }
+  .chapterflags figure { flex:1; text-align:center; }
+  .chapterflags img, .chapterflags svg.flag { width:100%; max-width:196px; height:104px; object-fit:cover; border-radius:10px; border:1px solid rgba(216,178,92,.3); }
+  .chapterflags figcaption { font-size:12.5px; color:#b9b29e; letter-spacing:.18em; margin-top:6px; }
+  /* ---------- 结局背景 ---------- */
+  .endwrap { position:relative; }
+  .endwrap .bgimg { position:absolute; inset:-8px -6px; background:url('img/title-painting.jpg') center 22%/cover no-repeat; opacity:.13; border-radius:16px; pointer-events:none; }
+  .endwrap .inner { position:relative; z-index:1; }
+
+#bgmBtn{position:fixed;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid rgba(240,200,90,.55);background:rgba(10,16,34,.72);color:#f0c85a;font-size:21px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+#bgmBtn.off{opacity:.45}
+#bgmBtn.off::after{content:'';position:absolute;left:7px;right:7px;top:50%;height:2px;margin-top:-1px;background:#f0c85a;transform:rotate(-45deg)}
+.dexcard .portraits{margin-bottom:2px}
+.dexname{font-size:19px;font-weight:700;text-align:center;margin-top:2px}
+.dexrole{text-align:center;color:var(--gold,#c9a959);font-size:13px;margin:2px 0 6px}
+.dextag{text-align:center;font-style:italic;opacity:.92}
+.introline{margin:2px 4px 10px;padding:8px 10px;border-left:3px solid var(--gold,#c9a959);background:rgba(201,169,89,.08);font-size:14px;line-height:1.55}
+.archwrap{margin-bottom:10px}
+.archimg{width:100%;height:auto;display:block;border-radius:10px;border:1px solid rgba(216,178,92,.3);background:rgba(255,255,255,.04)}
+.archname{font-weight:700;font-size:16.5px;color:#f5edd3;margin-bottom:4px}
+
+</style>
+<meta property="og:type" content="website"><meta property="og:title" content="再起群星：假如你是总统"><meta property="og:description" content="点开即玩：扮演总统雪仙，重演星空合众国 2023–2024 的真实历史。36 个抉择，17 个结局，没有回头路。"><meta property="og:image" content="https://eztakesin.github.io/starry-sky-chronicle/img/og-card.jpg"><meta property="og:url" content="https://eztakesin.github.io/starry-sky-chronicle/play.html"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="再起群星：假如你是总统"><meta name="twitter:description" content="点开即玩：扮演总统雪仙，重演星空合众国 2023–2024 的真实历史。36 个抉择，17 个结局，没有回头路。"><meta name="twitter:image" content="https://eztakesin.github.io/starry-sky-chronicle/img/og-card.jpg"></head>
+<body>
+<div id="app">
+  <div id="hud"></div>
+  <main id="screen"></main>
+</div>
+
+<script>
+/* ================= CORE：数据与状态机（无 DOM 依赖，可在 node 中加载） ================= */
+var SSF = (function () {
+  'use strict';
+
+  var STATLAB = { mx:'民心', gk:'国库', aq:'安全', wj:'外交', qb:'前辈满意度', rh:'新移民融合度', gz:'公正度' };
+  var MAINKEYS = ['mx','gk','aq','wj'];
+
+  function clamp(v){ return Math.max(0, Math.min(100, Math.round(v))); }
+
+  var STYLES = {
+    iron:      { name:'铁腕',     desc:'令行禁止，军队与纪律先行。安全 +10，民心 -5，前辈满意度 +5。', fx:{ aq:10, mx:-5, qb:5 } },
+    benevolent:{ name:'怀柔',     desc:'先安人心，再论其他。民心 +10，融合度 +5，安全 -5。',          fx:{ mx:10, rh:5, aq:-5 } },
+    builder:   { name:'建设狂',   desc:'钱要花在看得见的地方。国库 +10，安全 -5。',                    fx:{ gk:10, aq:-5 } },
+    diplomat:  { name:'外交家',   desc:'朋友多多的，敌人少少的。外交 +15，国库 -5。',                  fx:{ wj:15, gk:-5 } }
+  };
+
+  function newState(styleKey){
+    var st = {
+      style: styleKey || 'benevolent',
+      stats: { mx:55, gk:45, aq:50, wj:40, qb:65, rh:35, gz:50, yh:0 },
+      flags: {}, idx: 0, enteredFor: -1, pendingNote: '',
+      history: [], ending: null, finished: false
+    };
+    var sf = STYLES[st.style] ? STYLES[st.style].fx : {};
+    for (var k in sf) st.stats[k] = clamp(st.stats[k] + sf[k]);
+    return st;
+  }
+
+  /* 应用数值效果；返回实际变动量。处理「破产拖累」：国库见底时再扣国库，额外扣民心 3。 */
+  function applyFx(st, fx, outcome){
+    var deltas = {};
+    if (!fx) return deltas;
+    if (st._warAmp){
+      if (fx.qb < 0 || fx.rh < 0){
+        var fxA = {}; for (var ak in fx) fxA[ak] = fx[ak];
+        if (fxA.qb < 0) fxA.qb = Math.round(fxA.qb * 1.5);
+        if (fxA.rh < 0) fxA.rh = Math.round(fxA.rh * 1.5);
+        fx = fxA;
+      }
+    }
+    var keys = ['mx','gk','aq','wj','qb','rh','gz'];
+    for (var i=0;i<keys.length;i++){
+      var k = keys[i];
+      if (fx[k]){
+        var before = st.stats[k];
+        st.stats[k] = clamp(before + fx[k]);
+        var d = st.stats[k] - before;
+        if (d) deltas[k] = d;
+      }
+    }
+    if (fx.yh) st.stats.yh = Math.max(0, st.stats.yh + fx.yh);
+    if (fx.gk && fx.gk < 0 && st.stats.gk <= 0){
+      var b2 = st.stats.mx;
+      st.stats.mx = clamp(b2 - 3);
+      var d2 = st.stats.mx - b2;
+      if (d2) deltas.mx = (deltas.mx || 0) + d2;
+      if (outcome) outcome.bankrupt = true;
+    }
+    return deltas;
+  }
+
+  function mergeDeltas(into, from){
+    for (var k in from) into[k] = (into[k] || 0) + from[k];
+    return into;
+  }
+
+  /* ================= 事件数据 ================= */
+  var EVENTS = {
+
+  /* ---------- 第一章 建制 ---------- */
+  E01: { id:'E01', ch:1, date:'2023.2.26', title:'新刑法之争',
+    body:[
+      '赫歇尔议会的视频会议开到深夜。桌面上只剩一份文件：新刑法草案。老臣们说它太严——「我们是靠人心聚起来的国家，不是靠条文。」年轻人说它太松——「没有牙齿的法律，护不住任何人。」',
+      '所有人的目光最后都落到你身上。这部刑法会成为这个国家的第一块基石，或者第一道裂缝。'
+    ],
+    choices:[
+      { label:'强行表决，今晚通过', hist:true, fx:{ aq:5, mx:-5 }, confront:true,
+        result:'表决通过。反对者的头像一个个暗下去，没有人鼓掌。安全有了骨架，但你也第一次尝到「赢了表决、凉了人心」的滋味。' },
+      { label:'搁置一月，下次再议', fx:{},
+        result:'草案被塞回抽屉。会议在一种谁都不满意的平静里结束——隐患不会消失，它只是在等一个更坏的时机。' },
+      { label:'交付全民公投', fx:{ mx:5 },
+        result:'公投拖慢了整个建制进度，群里吵了整整一周。但最终通过的那天，人们说：这是我们自己的法律。' }
+    ]},
+  E02: { id:'E02', ch:1, date:'2023.3.5', title:'建交潮',
+    body:[
+      '与苗栗国的首脑会谈刚在桃园结束，特维斯共和国、黄名帝国的建交请求就接连送到。外交部的年轻人眼睛发亮：这个小小的联邦，第一次被世界看见。',
+      '但国库的账本就摊在旁边。每一面新国旗插下去，都要花钱、花人、花精力。'
+    ],
+    choices:[
+      { label:'来者不拒，广结善缘', hist:true, fx:{ wj:10, gk:-5 },
+        result:'建交公报一份接一份地发。联邦的名字第一次密集出现在各国的公告栏里——代价是国库薄了一层，外交部连轴转了半个月。' },
+      { label:'只与强者结盟', fx:{ wj:5, aq:5 },
+        result:'你挑了最有分量的几个。名单短了，但每一份条约都有军事协防的实质内容。被婉拒的国家记下了这一课。' },
+      { label:'先关门搞内政', fx:{ gk:5 },
+        result:'使节们被礼貌地送走。省下的钱投回了本土建设，只是外交部的年轻人沉默了好几天。' }
+    ]},
+  E03: { id:'E03', ch:1, date:'2023.4.22', title:'国民卫队招新',
+    body:[
+      '联邦国民卫队对外招新，可警察机构同样缺人，缺到你不得不亲自排值班表。两位来自台湾的友邦人员加入了卫队——履历漂亮，能力出众，南十字星时期就打过交道。',
+      '问题是：没有人能管他们。把军务交给他们，你就能腾出手来；可军队一旦有了自己的主人，事情的性质就变了。'
+    ],
+    choices:[
+      { label:'让他们代管联邦军务', hist:true, fx:{ aq:5, yh:2 }, setFlags:['armyAuto'],
+        result:'军务立刻上了轨道，操典、巡逻、招新，井井有条。你松了口气——却没注意到，士兵们开始先向那两位敬礼，再向总统府敬礼。' },
+      { label:'由你亲自兼管', fx:{}, setFlags:['selfCommand'],
+        result:'你把军务扛在自己肩上。白天处理政务，深夜审阅军报。军队没有坐大，但你能感觉到，自己的精力正在被一寸寸磨掉。' },
+      { label:'宁缺毋滥，推迟招新', fx:{ aq:-5 },
+        result:'招新公告撤了下来。卫队的缺口还在，夜里巡逻的人手捉襟见肘——但至少，这支军队从头到尾只听一个声音。' }
+    ]},
+
+  /* ---------- 第二章 联盟 ---------- */
+  E04: { id:'E04', ch:2, date:'2023.5.14', title:'闪耀星空国际防御联盟',
+    body:[
+      '你拟了一份号召书，准备发给大使馆区域的各大微国家：成立一个跨洲的防御联盟。有人私下提醒你——这看起来太像南十字星时代的延续了，那个时代的荣光与阴影，一样重。',
+      '政府发言人已经备好否认的说辞。就等你签字。'
+    ],
+    choices:[
+      { label:'发出号召，组建联盟', hist:true, fx:{ wj:15 }, setFlags:['treeBig'],
+        result:'响应比预想的快得多。联盟一路扩张，巅峰时涵盖地球全部大洲的一百一十多个微国家。你的名字第一次出现在「大国领袖」的名单里——树大招风，也是从这一天开始的。' },
+      { label:'只签双边协防条约', fx:{ wj:5, aq:5 },
+        result:'没有盛大的成立仪式，只有一份份务实的双边条约。联邦的安全实实在在地厚了一层，只是少了些星辰大海的味道。' },
+      { label:'不结盟，保持中立', fx:{},
+        result:'号召书被你锁进抽屉。联邦继续安静地过自己的日子——而大使馆区域的酒桌上，人们开始谈论「那个错过了机会的联邦」。' }
+    ]},
+  E05: { id:'E05', ch:2, date:'2023.5.21', title:'文西亚的建议',
+    body:[
+      '与印度的文西亚共和国的线上会议上，对方的首脑直言不讳：「你们的议会、军队、外交都像模像样了，但你们没有经济系统。一个国家不能永远靠热情运转。」',
+      '这话不好听。但散会之后，你盯着国库那本薄薄的账，知道他说中了。'
+    ],
+    choices:[
+      { label:'采纳，启动经济改革', hist:true, fx:{}, setFlags:['econ'],
+        result:'经济改革的齿轮开始转动：记账、流通、实体产业的雏形。从今往后，每个章节国库都会有一笔稳定的进账——不多，但那是根系。' },
+      { label:'先政治，后经济', fx:{}, setFlags:['econDelay'],
+        result:'你把建议记在备忘录的最后一条。眼下有更要紧的事——只是备忘录这种东西，往往要等到出事那天才会被重新翻开。' },
+      { label:'全力扩军，经济再说', fx:{ aq:5, gk:-10 },
+        result:'新装备和招新补贴把国库掏空了一截。卫队的队列齐整了许多，账房先生的脸却绿了。' }
+    ]},
+
+  /* ---------- 第三章 政变 ---------- */
+  E06: { id:'E06', ch:3, date:'2023.7.3', title:'罢免之夜',
+    body:[
+      '议会大厅的灯全亮着。今晚表决的议案是：罢免总统，和总理。坐在你左手边的，是与你地位等同的建国元老菲尔南德——当年签下接纳法案、把无数漂流者变成公民的人。他没有看你，只低声说了一句：「规则是我们一起定的。无论结果如何，别让规则先死。」',
+      '车长的名字在走廊里被反复提起。他是南十字星时期的重大贡献者，打过最硬的仗，菲尔南德的旧部，军中威望极高。议会想让他接任——一个「更听话、更强硬」的总统。',
+      '表决器就在你手边。今晚过后，这个国家可能不再是你的了。'
+    ],
+    choices:[
+      { label:'接受罢免，交棒给车长', hist:true, fx:{ qb:5, mx:-5 }, setFlags:['stepDown'],
+        result:'结果宣布时，菲尔南德第一个站起来，向你微微欠身——那是给规则的礼，不是给你个人的。你走出大厅，走廊很长。车长与你擦肩而过，他顿了一下，什么也没说。你进入了蛰伏：不再是总统，但所有人都知道你还看着。' },
+      { label:'拒绝承认罢免合法性', special:'e06b',
+        result:'' },
+      { label:'宣布解散议会，重新选举', special:'e06c',
+        result:'' }
+    ]},
+  E07: { id:'E07', ch:3, date:'2023.7.30', title:'禁言提案',
+    body:[
+      '车长上台不到一个月。四人组——车长和他最亲近的三位军官——向议会提交提案：《议会期间禁止闲聊》。理由写得冠冕堂皇：议会不是茶话会，国家需要秩序。',
+      '你以普通公民的身份坐在旁听席最后一排。你看得清清楚楚：车长宣读提案时并不轻松，他是真心相信「吵成菜市场的议会救不了国家」。可提案传开之后，全国的愤懑像水烧开了一样——人们被夺走的不是闲聊，是说话的资格。',
+      '有人开始私下问你：你还在吗？'
+    ],
+    choices:[
+      { label:'公开谴责，站到民众一边', fx:{ mx:10 }, setFlags:['target'],
+        result:'你的公开信发出去的当晚就传遍了所有群组。民众找到了主心骨——而四人组也找到了靶子。你的名字出现在内部通报的第一行。' },
+      { label:'暗中串联议员与民众', hist:true, fx:{ mx:5 }, setFlags:['network'],
+        result:'你没有出现在任何公开场合。但议员们的私信、民兵骨干的名单、备用指挥链，一条条在暗处接通。菲尔南德托人带话给你：「需要我出面时，说一声。」' },
+      { label:'保持沉默，明哲保身', fx:{ mx:-5 }, setFlags:['coupStrong'],
+        result:'你关掉了消息提醒。沉默的日子里，四人组把一道道命令签得飞快。有人开始说：雪仙已经不管我们了。' }
+    ]},
+  E08: { id:'E08', ch:3, date:'2023.7.30', title:'军事镇压与推翻',
+    body:[
+      '镇压来得比所有人预想的都快。国民卫队封锁了议会频道，巡逻队出现在首都各区。四人组的逻辑并不复杂：先有秩序，再谈一切——他们是真的这样相信的，这也是最可怕的地方。',
+      '车长站在指挥屏前。有人说他下令时手在抖，也有人说他比谁都坚决。军队已经动了——而首都另一侧，菲尔南德的私人卫队正在集结。这位与你平级的元老还没有表态：他在等一个信号，看人心到底还在不在。人群的最前面，你看见了玉米——那个跟着你打过最硬仗的人。他这一夜，是站在你这边的。',
+      '现在轮到你了。'
+    ],
+    choices:[
+      { label:'号召民众，推翻镇压', hist:true, special:'e08a', confront:true,
+        result:'' },
+      { label:'谈判，换取他们和平下台', fx:{ mx:5, aq:-5, gk:-5 }, setFlags:['remnant'],
+        result:'谈判桌上谈了整整一夜。车长最后摘下了军帽：「我没想把国家带进沟里。」四人组交出了权力，首都完好无损——但他们的人、他们的网络都还在，只是转入了暗处。这笔账，以后再算。' },
+      { label:'流亡海外，另立政府', special:'e08c',
+        result:'' }
+    ]},
+  X01: { id:'X01', ch:3, date:'2023.8', title:'流亡 · 海外重建', exile:true,
+    body:[
+      '你离开的那晚没有仪式。行李只有一台电脑和一箱换洗衣服。在海外的第一个月，你靠着一间租来的小屋和一部时好时坏的网络，把流亡政府的架子重新搭起来：公告照常发，议会照常开，只是每个人的头像后面都多了一层屏幕。',
+      '有人留下，有人散去。离开的人没有错——他们只是做出了自己的选择。你能做的，是把门口的灯留着。'
+    ],
+    choices:[
+      { label:'继续', fx:{ mx:-5 },
+        result:'流亡政府的名册一天天变薄，又一天天有新名字加进来。你开始学着在没有首都的日子里，维持一个国家的形状。' }
+    ]},
+  X02: { id:'X02', ch:3, date:'2023.9', title:'流亡 · 遥控指挥之难', exile:true,
+    body:[
+      '遥控一个国家，比遥控一台机器难得多。时差让每道命令慢半拍，本土的消息传到你这里时往往已经变了味道。更难的是人心：留在本土的人开始私下问——我们还要等多久？',
+      '国内传来消息：临时当局的统治正在松动，民众的思念与不满同时涨到了顶点。此刻回国，窗口只有一次。'
+    ],
+    choices:[
+      { label:'评估局势，决定去留', special:'x02',
+        result:'' }
+    ]},
+  E09: { id:'E09', ch:3, date:'2023.7.31', title:'首都爆破之夜', fx:{ aq:-4, mx:-4 }, onEnter:function(st){ return '爆炸已经发生了。这不是你的选择——是你要收拾的局面。'; },
+    body:[
+      '你重返执政的当晚。深夜十一点四十分，首都方向传来沉闷的巨响——爆破。火光映红了半个天际线，通讯频道瞬间被问询淹没。是谁干的、为什么，暂时都没有答案，只有一座正在燃烧的首都，和几十万双看着你的眼睛。',
+      '你站在临时指挥点前，衣服上还沾着灰。这一夜你怎么过，这个国家接下来很多年都会记得。'
+    ],
+    bodyAlt:{ flag:'exileReturn', paras:[
+      '你回国的第一晚。深夜十一点四十分，首都方向传来沉闷的巨响——爆破。流亡数月、归来未稳，这把火像是在烧给所有人看：这个国家的心脏，依然脆弱。',
+      '你站在临时指挥点前，衣服上还沾着灰。这一夜你怎么过，这个国家接下来很多年都会记得。'
+    ]},
+    choices:[
+      { label:'连夜重建，次日完工', hist:true, fx:{ gk:-10, mx:14, aq:4 }, setFlags:['xinxiang'],
+        result:'你调来了所有能调的人。图纸在废墟边上摊开，咖啡和灰尘一起往下咽。天亮时，首都的主体结构重新立了起来——你在废墟前坐下，手抖得握不住杯子。不是因为害怕，是因为你知道：今晚但凡慢一步，人心就跟着首都一起塌了。这个国家欠你的，你也欠这个国家的，今夜两清了一笔。' },
+      { label:'先封锁现场，追查凶手', fx:{ aq:5, mx:-5 },
+        result:'封锁线连夜拉起，调查组进驻。真相的优先级排在了废墟前面——首都就那样焦黑着过了一夜，第二天清晨的照片传遍了所有友邦。' },
+      { label:'迁都，另起新城', fx:{ mx:-5, gk:-5 }, setFlags:['newCapital'],
+        result:'迁都令签下的那一刻，高川市六年的历史被留在了身后。新城的规划图很漂亮，只是老人们在群里一遍遍发旧首都的照片，很久没有停。' }
+    ]},
+
+  /* ---------- 第四章 建设 ---------- */
+  E10: { id:'E10', ch:4, date:'2023.8.1', title:'舆论战',
+    body:[
+      '被驱逐的叛军残部转到了外网。一夜之间，十几个账号开始批量散布首都爆破的「真相」：有说内讧的，有说你自导自演的。友邦的外交官私下问你：需要帮忙澄清吗？',
+      '舆论这种东西，你不占领，它就占领你。但每一次回应，也都是在给对方抬轿子。'
+    ],
+    choices:[
+      { label:'正面应战，逐条驳斥', hist:true, fx:{ wj:3 },
+        result:'联邦的澄清公告写得克制而有据。对方的叙事在证据面前一段段塌掉，这场舆论战以他们的落败收场——输掉的人，连夜删了号。' },
+      { label:'冷处理，不予回应', fx:{}, special:'e10b',
+        result:'' },
+      { label:'用重建的首都说话', reqFlag:'xinxiang', reqLabel:'需要先在「首都爆破之夜」选择连夜重建', fx:{ wj:5, mx:5 },
+        result:'你没有写一个字的驳斥，只是发布了首都重建的延时影像：废墟、脚手架、亮灯的街道。影像传遍微国圈的那天，对方的账号再也没有更新过。事实自己会走路。' }
+    ]},
+  E11: { id:'E11', ch:4, date:'2023.8.20', title:'签证与服务器',
+    body:[
+      '新一届议会召开，两件事摆在同一张桌上：签证政策要不要收紧——政变的教训还烫手；另一边，官方 Minecraft 服务器刚刚建成，年轻人已经在里面盖起了第一条街。',
+      '门开多大，决定了这个国家未来的人口结构。这道题，你今天的答案会在一年后变成国情。'
+    ],
+    choices:[
+      { label:'严防死守，收紧签证', hist:true, fx:{ aq:5 }, recruit:-1, setFlags:['visaStrict'],
+        result:'签证审核严到近乎苛刻。混进来的风险降到了最低，代价是移民流入明显放缓——未来的联邦，会是一个「老人」比例更高的国家。' },
+      { label:'宽进严出，平衡之道', fx:{}, recruit:1,
+        result:'进门容易留下难。审核的压力从边境挪到了内部管理，两边都不极致，两边也都挑不出大错。' },
+      { label:'全面开放，广纳新人', fx:{ rh:5, aq:-5 }, recruit:2, setFlags:['openDoor'],
+        result:'大门敞开，新移民的申请像潮水一样涌进来。联邦的平均年龄骤降，活力扑面——安保部门则整夜整夜地加班。' }
+    ]},
+  E12: { id:'E12', ch:4, date:'2023.9.17', title:'新移民入阁',
+    body:[
+      '新一届议会确立了科幻发展方向。散会前，你提了一份名单：几位新移民，将被任命到几个重要位置上——这是联邦历史上第一次。',
+      '会场安静了几秒。前辈们的目光在名单和你之间来回。他们想问的是同一句话：这个国家，还是我们的国家吗？'
+    ],
+    choices:[
+      { label:'大胆任命，唯才是举', hist:true, fx:{ rh:10, qb:-5 }, recruit:1,
+        result:'任命书签发的那天，新任命的年轻人站在议会门口，紧张得把演讲稿捏出了汗印。前辈席位上有人提前退了场。但从这一天起，「新来的」三个字，在这个国家慢慢变成了「我们的人」。' },
+      { label:'只给副职，徐徐图之', fx:{ rh:-3, qb:-3 },
+        result:'名单砍了一半，实职改成了副职。新移民觉得诚意不足，前辈觉得让步太多——两边都不满意的时候，往往就是谁也没占到便宜。' },
+      { label:'暂缓任命，还是前辈来', fx:{ qb:5, rh:-10 }, recruit:-1,
+        result:'名单被收回了抽屉。前辈们的表情松弛下来，而走廊尽头，几个原本在等消息的年轻人默默删掉了准备好的就职感言。' }
+    ]},
+  E13: { id:'E13', ch:4, date:'2023.10.26', title:'建国五周年',
+    body:[
+      '联邦迎来建国五周年。五天后是 1031 两周年纪念日，再往后，十一月一日民主纪念日的庆祝也要开场。三庆连珠，礼宾司拿着三套预算方案站在你门口。',
+      '国库不算宽裕。但一个刚刚经历过政变和爆破的国家，人们需要一点亮光——这个道理，你比谁都懂。'
+    ],
+    choices:[
+      { label:'盛大庆祝，三庆连办', hist:true, fx:{ mx:10, gk:-5 },
+        result:'庆典的灯光亮了整整一周。老人们在纪念墙前站了很久，年轻人把庆典视频剪成了招新素材。政变留下的阴影，第一次被笑声盖了过去。' },
+      { label:'节俭庆祝，心意到了就行', fx:{ mx:3 },
+        result:'庆典缩了水，但该有的仪式一样没少。账房先生松了口气，普通国民也过得去——只是少了些能记很多年的场面。' },
+      { label:'借庆典办和解大会', fx:{ qb:3, rh:3, mx:5 },
+        result:'你把庆典的一半改成了前辈与新移民的恳谈。没有盛大的场面，但几位在政变期间站到对立面的老臣，第一次和新任命的年轻人坐在了同一张桌子边。' }
+    ]},
+  E14: { id:'E14', ch:4, date:'2023.11.5', title:'特权之怨',
+    body:[
+      '最新的人口统计送到你桌上：新移民的比重，已经超过了百分之六十。几乎同时，前辈们的联名信也到了——措辞克制，但意思明确：他们为这个国家打过仗、流过汗，如今「自己的特权无法得到发挥」。',
+      '你把联名信读了三遍。你知道这不是矫情：一个人最怕的不是失去特权，而是发现自己用命换来的位置，正在被时代无声地抹掉。可另一边，新移民的六成人口，同样是不可逆转的事实。'
+    ],
+    choices:[
+      { label:'安抚前辈，确认既有特权', hist:true, fx:{ qb:10, rh:-5 }, setFlags:['privilege'],
+        result:'前辈们的特权被白纸黑字确认下来，联名信的署名人们陆续发来了致谢。风波平息了——只是平息的方式，是把矛盾原样封存，留给人口比例更高的那一年去引爆。' },
+      { label:'借势推进平等改革', fx:{ rh:5, qb:-10 },
+        result:'改革方案公布的那天，前辈的群里沉默了整整一夜。第二天，有人退了群，有人留下一句「这不是我们建的国家」。新移民那边则是一片欢腾。你的手在签署令上停了很久——两边都是你的国民，这句话说起来轻，签起来重。' },
+      { label:'召开恳谈会，各退一步', fx:{ qb:3, rh:3 }, setFlags:['sensitiveTopic'],
+        result:'恳谈会开了四个小时，谁也没有完全说服谁，但至少把话说到了桌面上。代价是：那些最敏感的议题，从此正式摆上了台面——它们不会再消失了。' }
+    ]},
+  E15: { id:'E15', ch:4, date:'2023.11.29', title:'官方账号破千',
+    body:[
+      '联邦官方账号的粉丝数，终于突破了一千。宣传团队把截图发给你，等你定方向。Malachite 那天的问题还悬在那里：「继续往外喊，还是回头看看家里？」',
+      '一千个粉丝不算多。但对一个从聊天群里长出来的国家来说，这意味着「被看见」的大门，真的开了一条缝。'
+    ],
+    choices:[
+      { label:'继续往外喊。门刚开一条缝，不能停。', hist:true, fx:{ wj:5 },
+        result:'宣传节奏保持了下来，联邦的对外声量稳步爬升。几个月后回头看，破千只是起点。' },
+      { label:'回头。先把家里建好，再谈被看见。', fx:{ gk:5 }, recruit:-1, fxAlt:{ stat:'mx', below:40, fx:{ mx:-3 }, resultSuffix:'只是命令传下去时，几个频道里飘起了嘀咕：关起门来花钱，倒是痛快。民心不高的时候，每一笔内部开支，都会被放大检视。' },
+        result:'宣传预算转成了建设款。账号涨粉慢了下来，但本土的项目进度表好看了很多。' },
+      { label:'把门打开。办开放日——让人进来看看。', fx:{ rh:5 }, recruit:2,
+        result:'开放日那天，大批新面孔涌进联邦的公共频道。新移民的比例又往上跳了一截——热闹是真的热闹，管理压力也是真的。' }
+    ]},
+  E155: { id:'E155', ch:4, date:'2023.12', title:'留灯',
+    body:[
+      '冬天到了，一批熟悉的名字开始陆续请长假：要备考的、要入职的、要陪家人的。他们走得都很安静，有人临走前把手头的工作交接得整整齐齐，有人只留了一句「忙完就回来」。',
+      '管理员私下问你：「名单上的人，要不要挨个挽留？他们可都是这个国家一块砖一块砖垒起来的人。」可你也清楚，他们要去面对的，是比任何虚拟国家都沉重的东西——现实。'
+    ],
+    choices:[
+      { label:'不强留。在门口，留一盏灯。', hist:true, fx:{ mx:3, rh:3 }, setFlags:['lamp','lampEarly'], countFlag:'lampCount',
+        result:'你没有发挽留令，只让管理员把他们的权限和位置原样保留，公告里写了一句：「门开着，灯亮着，忙完就回来。」走的人里，有人截图存了下来。' },
+      { label:'挽留。挨个发——情分和补贴，都给足。', fx:{ gk:-5, mx:3 }, reqStat:{ k:'gk', v:15 }, reqLabel:'需要国库 ≥15',
+        result:'你挨个发了消息，能留的补贴都留了。几个人改了主意，更多人还是走了——但走得心怀感激。挽留这件事，做到七分是情分，做到十分是绑架，你把握住了那条线。' },
+      { label:'下召回令。岗位，不等人。', fx:{ mx:-5, qb:-5, rh:-5, gz:-5 }, countFlag:'recall', confront:true,
+        result:'召回令一下，人数短期是回来了一些。可频道里的气氛肉眼可见地冷了下去——被「命令」回来的人，坐在工位上，心不在。你第一次意识到：一个靠自由意志聚起来的国家，最怕的就是命令本身。' }
+    ]},
+  E16: { id:'E16', ch:4, date:'2023.12.9', title:'闪耀星空国际峰会',
+    body:[
+      '闪耀星空国际峰会正式诞生。末水与吉吉联合邦、维恩利亚共和国、星际联邦、沙龙旌旗共和国的代表齐聚一堂——联邦是东道主，议程由你定调。',
+      '这是 2023 年的收官之战。宣言、军盟、还是经济共同体，你选的方向，会定义这个联盟下一个十年的性格。'
+    ],
+    choices:[
+      { label:'发表共同宣言', hist:true, fx:{ wj:10 },
+        result:'共同宣言发表的当晚，被转载到了一百多个微国家的公告栏。联邦的外交声望抵达了这一年的顶点。' },
+      { label:'推动军事同盟深化', fx:{ aq:5, wj:-3 },
+        result:'军事条款签得很实。代价是几个邻国连夜开了闭门会——一个武装起来的联盟，在别人眼里从来不只是防御。' },
+      { label:'提议经济共同体', reqFlag:'econ', reqLabel:'需要先在「文西亚的建议」中启动经济改革', fx:{ wj:5, gk:10 }, setFlags:['econBoost'],
+        result:'经济共同体的框架搭了起来，联邦的国库从此多了一条加速通道。文西亚的首脑发来私信：「你们学得比我想的快。」' }
+    ]},
+  E17: { id:'E17', ch:4, date:'2023.12.31', title:'第三届跨年晚会',
+    body:[
+      '联邦第三届跨年晚会开幕在即。这一年，你们经历了政变、镇压、首都爆破和重建。晚会的节目单排得满满当当，可你的目光越过它，看向了新一年的第一份人口报告——新移民的比例，还在涨。',
+      '晚会怎么收尾，某种程度上，就是你给这一年定的调子。'
+    ],
+    choices:[
+      { label:'照常盛大举办', hist:true, fx:{ mx:5 },
+        result:'零点的钟声里，所有频道一起刷起了国歌的名字。这一年再难，也算是笑着送走的。' },
+      { label:'改为年度总结大会', fx:{}, setFlags:['warned'],
+        result:'你借总结大会的机会，把前辈与新移民的矛盾提前摆到了所有人面前。气氛有些沉重，但新年伊始，人们心里都有了数。' },
+      { label:'取消晚会，全员搞建设', fx:{ gk:5, mx:-5 },
+        result:'跨年夜的工地上灯火通明。项目进度很漂亮，只是那天夜里，不少年轻人在群里发了一句：有点想家。' }
+    ]},
+
+  /* ---------- 第五章 五次前新战争 ---------- */
+  E18: { id:'E18', ch:5, date:'2024.1.7', title:'巴巴多斯被吞并', cond:function(st){ return recruitLevel(st) !== 'none'; },
+    body:[
+      '新年第一周，急报传来：白给蓝联邦吞并了联邦的海外领土巴巴多斯。白给蓝的控制者不是别人——玉米，前辈中的前辈，南十字星时代就跟着打天下的功臣，如今独镇一方。',
+      '你很清楚玉米的分量：他不是外敌，他是这个国家的奠基人之一。可奠基人的手，刚刚按在了联邦的领土上。外交部的抗议书已经拟好，就等你决定它的温度。'
+    ],
+    choices:[
+      { label:'严正谴责，并启动制裁', hist:true, fx:{}, setFlags:['cornEnemy'],
+        result:'抗议书用词严厉，制裁随即落地。玉米那边沉默了两天，回了一句：「好，好得很。」从这一天起，前辈阵营与你的裂痕，公开化了。' },
+      { label:'军事对峙，逼其退让', special:'e18b',
+        result:'' },
+      { label:'忍让，先保本土', fx:{ mx:-5 }, setFlags:['cornPush'],
+        result:'联邦只发了一份不痛不痒的声明。巴巴多斯就这样丢了。消息传开的那晚，有年轻人在频道里问：我们的领土，可以这样送人吗？' }
+    ]},
+  E19: { id:'E19', ch:5, date:'2024.1.8', title:'前辈回归潮', cond:function(st){ return recruitLevel(st) !== 'none'; },
+    body:[
+      '几乎在同一时间，另一件轰动的事发生了：前辈回归潮。不少曾经与联邦失散的老官员——在 Q 虚时代、南十字星时代立过功的人——陆续回归赫歇尔，引起了不小的轰动。',
+      '他们带着旧日的荣光回来，也带着旧日的习惯回来。而如今的联邦，九成是新移民的天下。安顿这批人，就是安顿这个国家的记忆——或者引信。'
+    ],
+    choices:[
+      { label:'官复原职，重用前辈', hist:true, fx:{ qb:10, rh:-5 },
+        result:'老官员们陆续回到熟悉的岗位，动作熟练得像从未离开。只是新任命的年轻人发现，会议室里的座次，一夜之间又变回了旧样子。' },
+      { label:'一视同仁，按考核上岗', fx:{ rh:5 },
+        result:'回归的前辈和新移民站在同一条起跑线上。有人不忿，有人服气。规则面前人人一样——这句话，你们说出口的时候，底气比去年足了。' },
+      { label:'请前辈先培训新移民', fx:{ qb:5, rh:5, gk:-3 },
+        result:'老带新的培训营开了起来。慢是慢了些，错过了几个时机，但课堂上有个意想不到的收获：几位前辈讲起当年的仗，台下的年轻人听得入了神。' }
+    ]},
+  E20: { id:'E20', ch:5, date:'2024.1.18', title:'华江斯坦封锁', cond:function(st){ return recruitLevel(st) !== 'none'; }, fx:{ wj:-6 }, onEnter:function(st){ return '封锁先发生了——没有宣战，没有解释。外交已经受损，你的回应决定它能不能回来。'; },
+    body:[
+      '台湾微国圈子的领头者华江斯坦，毫无征兆地封锁了联邦的所有官方账号。起初没有任何理由，后来在压力下补了几个，连他们自己圈内的人都看不下去。',
+      '宣传部门的负责人站在你面前，袖子已经挽起来了：「这一仗，打不打？」'
+    ],
+    choices:[
+      { label:'舆论反击，奉陪到底', hist:true, fx:{ wj:11 },
+        result:'联邦的回应又快又准，五十一分钟的舆论轰炸之后，华江斯坦宣布与联邦停战。这一仗打完，微国圈里再没人敢随便拿联邦练手。' },
+      { label:'私下外交斡旋', fx:{ wj:3 },
+        result:'斡旋走了七天，封锁悄无声息地解除了。没有胜负，没有道歉——成年人的世界里，很多仗都是这样结束的。' },
+      { label:'冷处理，不予理会', fx:{ wj:-5, mx:-3 },
+        result:'封锁持续了下去。联邦的对外宣传少了一整块阵地，年轻人开始抱怨：我们为什么总是挨打不还手？' }
+    ]},
+  E21: { id:'E21', ch:5, date:'2024.1.26', title:'第一次前新战争', cond:function(st){ return recruitLevel(st) !== 'none'; }, fx:{ qb:-4, rh:-4 }, onEnter:function(st){ return '火已经烧起来了。两边的人都站好了队——这不是你点的火，但要你来收。'; },
+    body:[
+      '导火索小得可笑：一场误会。前辈玉米和新移民咖喱——北海岸最能干的年轻人之一——在频道里撞上了，几句话没说对，积压了半年的情绪轰然点燃。这就是第一次前新战争。',
+      '卷宗送到你桌上时，两个人的支持者已经各自站好了队。所有人都在看你怎么判：判玉米，是动功臣；判咖喱，是寒新人的心。你握着笔，第一次清楚地意识到——从这一页开始，你签下的每一个字，都会被全民记进一本叫「公正」的账上。',
+      '散会前，咖喱在走廊里拦住你，只问了一句：「总统，我还能信这个国家讲理吗？」走廊的另一头，玉米的人也在看着你。'
+    ],
+    choices:[
+      { label:'先查。误会没查清之前，谁都不许动。', hist:true, fx:{ gz:10, rh:9, qb:4 }, setFlags:['curryGovernor'],
+        result:'调查结论出来：是误会。但程序走完时，咖喱已经被误驱逐了三天——错不在你，账却记在你头上。三天后咖喱回归，你亲自签了她的升职令：北海岸总督。她接令时说：「我信这个国家，还能讲理。」公正度这本账，你开了个好头，但代价是真实的。' },
+      { label:'各打五十大板。先灭火，剩下的慢慢算。', fx:{ gz:-5 }, setFlags:['misunderstanding'],
+        result:'处罚对半分，频道暂时安静了。可误会没有查清，就像一根扎进肉里的刺——它会在下一次冲突里，扎得更深。' },
+      { label:'保新人。玉米——按律重罚。', fx:{ gz:-5, qb:-10 }, setFlags:['eldersShock'], confront:true,
+        result:'裁决公布，前辈阵营一片哗然。几位刚回归的老官员连夜收拾了行李——回归潮，就这样被你亲手提前送走了。' }
+    ]},
+  E22: { id:'E22', ch:5, date:'2024.2.14', title:'第二次前新战争', cond:function(st){ return recruitLevel(st) !== 'none'; },
+    body:[
+      '第二次战争的导火索，是敏感议题的许可度。一位很有才华的建设者——本土工程的主力之一——因为议题立场被卷进漩涡。挑起事端的人证据确凿，就等你一句话。',
+      '但你的手停在半空。你太清楚了：玉米刚刚在第一次战争里受了委屈，前辈阵营的神经正绷到极限。此刻重罚挑事者，前辈们会把它读成「总统在清算我们」——整个阵营可能当场总爆发。保稳定，还是保公正？这道题没有第三个选项，你在深夜里坐了很久。'
+    ],
+    choices:[
+      { label:'重罚挑起者，公正优先', fx:{ gz:10, qb:-10 }, setFlags:['talentKept'], confront:true,
+        result:'处罚落地的那一夜，前辈的几个频道炸了锅，但预想中的总爆发没有来——人们到底还是讲理的。那位建设人才留了下来，后来成了本土完工的关键人物。你赌赢了：这个国家的底线，比你想的要稳。' },
+      { label:'维持原判，稳定优先', hist:true, fx:{ gz:-10 }, setFlags:['talentLost'],
+        result:'你最终没有签字。挑起者全身而退，那位建设人才在沉默中收拾东西，离开了联邦。很多年后你还会想起这个晚上：你保住了稳定，输掉了一个人，和一分再也补不回来的公正。这就是领袖的账——有些选择，你明知道代价，还是得付。' },
+      { label:'立法划清敏感议题边界', fx:{ gz:5, qb:-5 }, setFlags:['boundaryLaw'],
+        result:'你把争议变成了条文：什么能谈、什么不能碰，白纸黑字。短期内冲突更激烈了——划线的地方总有人试探——但从此每一场争论，都有法可依。' }
+    ]},
+  E23: { id:'E23', ch:5, date:'2024.2.25', title:'第三次前新战争', cond:function(st){ return recruitLevel(st) === 'full'; },
+    body:[
+      '玉米再次出事：他对一位绘制地图的年轻人出言不逊，用词之难听，连他的老伙计们都沉默了。而这不是第一次了：这段时间，他对新移民的冷嘲热讽一句比一句重，各城的抗议已经连成片。法院的卷宗堆在你桌上，判决草案只有一行：驱逐出境。',
+      '你盯着「玉米」两个字看了很久。这个人跟着你打过最难的仗——政变那一夜，他是站在你这边的人。没有他，就没有今天的一半版图。可卷宗也是真的，受害的年轻人也是真的。你的手在抖——你想起自己说过的话：我已经做过一次坏人了，不想再审判任何人。但总统这个位置，从来不由你挑想不想。'
+    ],
+    choices:[
+      { label:'支持法院判决，驱逐玉米', hist:true, special:'e23a', confront:true,
+        result:'' },
+      { label:'从轻发落，流放边疆即可', fx:{ qb:-5 }, setFlags:['cornRemnant'],
+        result:'你把驱逐改成了流放。玉米带着他的人去了边疆——人走了，势力还在。西南离岛方向，时不时还有不服气的消息传回来。' },
+      { label:'特赦，换取阵营团结', fx:{ gz:-10, qb:5 }, setFlags:['cornAmnesty'],
+        result:'特赦令签下的当晚，前辈们弹冠相庆。可那个被辱骂的绘图者退掉了自己的账号——他什么都没说，只是把没画完的地图留在了共享文件夹里。' }
+    ]},
+  E23S: { id:'E23S', ch:5, date:'2024.2.25', title:'第三次前新战争 · 小规模', cond:function(st){ return recruitLevel(st) === 'some'; },
+    body:[
+      '玉米还是出事了：他对一位绘制地图的年轻人出言不逊。只是这一世，新移民没有多到淹没谁，年轻人也没有多到能掀起一场总爆发——消息传开，频道里吵了一天，就吵到了头。',
+      '卷宗送到你桌上时只有薄薄几页。驱逐？这个词，在这一世显得太重了。可不处理，那个被骂的年轻人正看着你。'
+    ],
+    choices:[
+      { label:'责令公开道歉，赔偿名誉', fx:{ gz:5, rh:5, qb:-3 }, setFlags:['cornApology'],
+        result:'玉米的道歉信在公告区挂了三天，字写得别别扭扭，但一个字没少。绘图者接受了——他把没画完的地图，又打开了。这一场小火，就这样灭了。很多年后你想：战争的规模，从来都是人口的函数。' },
+      { label:'从轻发落，内部警告了事', fx:{ qb:-3, gz:-3 },
+        result:'警告发到了玉米的私信里。他回了一个「知道了」。事情没有闹大，只是那个年轻人在群里说话的次数，肉眼可见地少了。' },
+      { label:'借机立下言行边界', fx:{ gz:5, qb:-5 }, setFlags:['boundaryLaw'],
+        result:'你把这场小冲突变成了一次立法：什么话能说、什么话不能碰，白纸黑字。规模小的时候划线，线就划得格外清楚。' }
+    ]},
+  E24: { id:'E24', ch:5, date:'2024.3.2', title:'第四次前新战争', cond:function(st){ return recruitLevel(st) !== 'none'; },
+    body:[
+      '敏感议题的旧账还是被翻了出来。第四次战争没有明确的导火索，更像一场总爆发：Q 虚时代的老人物开始离心离德，有人退群，有人留下长信，字字句句都是「这个国家变了」。',
+      '你知道他们说的「变了」是什么意思：新移民占了九成，旧人的位置、话语权、存在感，都在被稀释。这种痛，不是讲道理能讲没的。'
+    ],
+    choices:[
+      { label:'召开开诚布公大会', special:'e24a',
+        result:'' },
+      { label:'逐个私下安抚', fx:{ gz:-3, mx:3 }, setFlags:['appease'],
+        result:'你花了整整两天，一个一个地聊。嗓子哑了，大部分人留了下来。只是这样逐个安抚的法子，耗尽了你处理下一件事的精力——而下一件事，来得比谁都快。' },
+      { label:'强行压下，不许再提', hist:true, fx:{ qb:-5, rh:-5 }, setFlags:['suppress'], confront:true,
+        result:'禁令一下，频道安静得像深夜的海面。表面平静了——可你我都知道，海面之下，第五次战争正在成形，而且会比前四次加起来都猛烈。' }
+    ]},
+  E25: { id:'E25', ch:5, date:'2024.3.3', title:'第五次前新战争 · 首都解散', cond:function(st){ return recruitLevel(st) === 'full'; }, fx:{ aq:-5 }, onEnter:function(st){ return '首都的局势先崩了一角。警报响起的时候，没有人在等你的命令。'; },
+    body:[
+      '第五次战争在第二天就爆发了。部分前辈企图以最恶毒的方式羞辱新移民——这一次没有误会，没有余地，你当场下令驱逐了带头的人。',
+      '但局势已经收不住了。首都的频道成了战场，每一句话都在把人往外推。顾问们站在你面前，给出最后一个方案：解散首都。这是第十三次亡国危机——前十二次，你们都扛过来了。这一次，扛过去的方法，是亲手拆掉自己的心脏，保住人。',
+      '你的手按在解散令上。签，还是不签？'
+    ],
+    choices:[
+      { label:'解散首都，断臂求生', hist:true, special:'e25a',
+        result:'' },
+      { label:'死守首都，硬扛到底', special:'e25b', confront:true,
+        result:'' },
+      { label:'提前疏散，分阶段解散', reqFlag:'openTalk', reqLabel:'需要先在「第四次前新战争」中召开开诚布公大会', fx:{ mx:-5 }, setFlags:['phased'],
+        result:'因为大会上把话说透了，疏散的名单和顺序早就谈妥。首都分阶段熄灯，人群有序散入各区——同样是解散，这一次没有人受伤。第十三次亡国危机，以最体面的方式度过。' }
+    ]},
+  E25S: { id:'E25S', ch:5, date:'2024.3.3', title:'第五次前新战争 · 未成燎原', cond:function(st){ return recruitLevel(st) === 'some'; }, histNote:'真实历史中，新移民超过九成，第五次战争规模大得多——首都最终被解散，才度过第十三次亡国危机。',
+    body:[
+      '第五次冲突还是来了：几位前辈试图以最难听的方式羞辱新移民，你当场驱逐了带头的人。但这一世的人口结构救了场——新移民约占七成，火势刚起，就被两边还讲理的人按了下去。',
+      '顾问们给出的方案也温和得多：首都频道要不要暂时关停几天，让所有人冷静？这不是第十三次亡国危机的全貌——但它依然是这个国家最接近散伙的一夜。'
+    ],
+    choices:[
+      { label:'首都频道关停三日，全员冷静', fx:{ mx:-5 }, setFlags:['capitalPaused'],
+        result:'首都频道关停了三天。第一天有人骂街，第二天有人开始想念，第三天，几个老家伙在小群里张罗着「回去吧」。三天后频道重开，人们说话都轻了几分。第十三次亡国危机，以这种方式擦肩而过。' },
+      { label:'死守首都，硬扛到底', special:'e25sb', confront:true,
+        result:'' },
+      { label:'提前疏散，分阶段冷静', reqFlag:'openTalk', reqLabel:'需要先在「第四次前新战争」中召开开诚布公大会', fx:{ mx:-3 }, setFlags:['phased'],
+        result:'因为大会上把话说透了，各区的负责人早就有了预案。人群有序分散到各个分区频道，没有推搡，没有对骂。危机以最体面的方式，降成了一次普通的坏天气。' }
+    ]},
+  E26: { id:'E26', ch:5, date:'2024.3.4', title:'改国号', cond:function(st){ return recruitLevel(st) !== 'none'; },
+    body:[
+      '战争停了。清点损失的会议上，有人摊开地图：赫歇尔继承自南十字星，而南十字星的两大源头之一——南十方——已经不在了。名不正则言不顺，这个国号，撑不起新时代了。',
+      '菲尔南德也来了。他坐在长桌的另一端，与你平级的位置上。五次战争里他始终没有公开站队，此刻他只说了一句：「名字是给活人用的。叫什么都行，别把人再弄丢了。」满座寂静。'
+    ],
+    choices:[
+      { label:'改。就叫新星空合众国——你说的，别再把人弄丢了。', hist:true, fx:{ mx:5, qb:-3, rh:5 },
+        result:'新国号公布的那天，老人们把旧旗帜小心地收进了纪念馆。前辈时代的象征清零了——不是被谁抹去，是这个国家亲手把它们放进了历史。菲尔南德在散会时与你并肩走了一段路，什么都没说。有些话，不说也到了。' },
+      { label:'不改。赫歇尔这个名字，留着。', fx:{ qb:3, mx:-3 }, fxAlt:{ stat:'rh', aboveEq:60, fx:{ mx:-3 }, resultSuffix:'新移民那边很快有了反应：名字都不肯改，改革的诚意又在哪里？融合越深的地方，这种别扭反而越明显。' },
+        result:'国号留了下来。前辈们松了口气，可新体制顶着旧名字推进时，总有一层说不出的别扭——改革这件事，名不正，真的言不顺。' }
+    ]},
+
+  /* ---------- 第五章（分支） 寂静的冬天：几乎没招新的世界线 ---------- */
+  E41: { id:'E41', ch:5, date:'2024.1.7', title:'静悄悄的冬天', cond:function(st){ return recruitLevel(st) === 'none'; },
+    body:[
+      '新年第一周，群里安静得反常。没有急报，没有战争——因为这一世，联邦没有大规模招过新。去年那道签证的门，你亲手关得很紧。',
+      '管理员把活跃报表发给你：在线人数、发言量、值班表，一项一项都在往下滑。几位中坚相继请了长假：要工作、要考试、要过日子。管理员问你：要不要做点什么？'
+    ],
+    choices:[
+      { label:'不挽留，在门口留一盏灯', fx:{ mx:3, qb:3 }, setFlags:['lamp'], countFlag:'lampCount',
+        result:'你回了句老话：门开着，灯亮着。走的人把权限留了下来，位置原样空着。群更安静了，但没有人觉得被抛弃——这是两种完全不同的安静。' },
+      { label:'办线上活动，把气氛炒热', fx:{ gk:-5, mx:5 },
+        result:'线上茶话会、老照片翻晒、建国史抢答——热闹了一个星期。热闹过后，报表回升了一截，又慢慢往回落。活动能续命，续不了根。' },
+      { label:'下达签到令，全员打卡', fx:{ mx:3, gz:-5 }, countFlag:'fade', confront:true,
+        result:'打卡率瞬间回到了九成。可频道里的气氛肉眼可见地冷了：人们出现在打卡区，问候一声，然后整天不再说话。你开始怀疑——一个靠命令维持活跃的群，和一个空群，区别到底在哪里。' }
+    ]},
+  E42: { id:'E42', ch:5, date:'2024.2.14', title:'迟到的开放日', cond:function(st){ return recruitLevel(st) === 'none'; },
+    body:[
+      '宣传团队小心翼翼地提议：要不要现在补办一次开放日，小规模招一批新人？老人们的反应分成两半：一半说早该如此，一半说——现在招，招进来的人还认这个国家吗？',
+      '你清楚这个决定的分量：一年前你关上的那道门，今天再开，门外的世界已经不一样了。'
+    ],
+    choices:[
+      { label:'小规模开放，慢慢来', fx:{ rh:10, qb:-3 }, setFlags:['lateOpen'],
+        result:'开放日来了十几个新人。不多，不吵，不闹。他们花了整整一个月才弄明白那些老典故——战争没有发生，人数太少、来得太迟，只够给这个老群添一点新鲜空气。但你看得出来，老人们讲起当年时，眼睛是亮的。' },
+      { label:'保持封闭，守住纯粹', fx:{ qb:5, mx:-3 },
+        result:'提议被否了。联邦继续做它的老人国：纯粹、安静、彼此熟悉。代价写在每一份活跃报表里，一行一行往下走，从不回头。' },
+      { label:'整理国家档案馆', fx:{ mx:5, gk:3 },
+        result:'你把人手投给了档案馆：六年的公告、地图、名册、照片，一件件归档。年轻的管理员问：这是给谁看的？你说：给以后回来的人看。他们总得知道，这里曾经发生过什么。' }
+    ]},
+  E43: { id:'E43', ch:5, date:'2024.2.25', title:'旧人离散', cond:function(st){ return recruitLevel(st) === 'none'; },
+    body:[
+      '这个月，又有三位中坚提出了长假申请：一位去外地工作，一位备考，一位只是说「累了，想歇歇」。没有冲突，没有眼泪，就是三个平静的申请，并排躺在你的收件箱里。',
+      '管理员的声音有点抖：再走下去，几个关键岗位就要没人了。你看着那三份申请，想起门口那盏灯——它照得到离开的人，照不到岗位的空缺。'
+    ],
+    choices:[
+      { label:'逐个联系，真诚挽留', fx:{ gk:-5, mx:3 },
+        result:'你挨个打了电话，能给的补贴和弹性都给了。一个人改了主意，两个人还是走了——走得心怀感激。你学到的还是那条老理：挽留做到七分是情分，做到十分，是绑架。' },
+      { label:'建一本老兵名册，留灯等他们', fx:{ mx:5 }, setFlags:['lamp'], countFlag:'lampCount',
+        result:'名册建起来了：每个人的名字、岗位、离开的日子和一句「位置留着」。有人在名册下面回复：「离开过也没关系，星星会等你。」你把这句话置了顶。' },
+      { label:'下召回令。岗位，不等人', fx:{ mx:-5, qb:-5, rh:-5, gz:-5 }, countFlag:'fade', recallHit:true, confront:true,
+        result:'召回令发出去，人数短期回来了一些。可你分明看见，回来的人坐在岗位上，心不在焉。管理员私下说：群里现在最安静的地方，就是会议室。' }
+    ]},
+  E44: { id:'E44', ch:5, date:'2024.3.3', title:'群还活着吗', cond:function(st){ return recruitLevel(st) === 'none'; }, histNote:'真实历史中，联邦在 2023 年选择了广纳新人：新移民最终超过九成，前辈与新移民之间爆发了五次前新战争，首都于 2024.3.3 被解散，才度过第十三次亡国危机。',
+    body:[
+      '三月三日。这一周，整个联邦所有频道的消息加起来，不到一百条。值班表空了三格，议会因为到会人数不足，流会了两次。',
+      '深夜，一位老管理员在核心群里发了一条消息，只有一句话：「不如，体面地解散了吧。」没有人立刻回复。那条消息就那样亮着，像这个国家此刻的样子——第十三次亡国危机，在这一世没有炮声，只有沉默。'
+    ],
+    choices:[
+      { label:'办一场线上重聚夜', fx:{ mx:10, gk:-5 },
+        result:'重聚夜的通知发出去，你忐忑了一整天。到了晚上，灰了很久的头像一个接一个亮起来：有人在工地，有人在宿舍，有人抱着孩子。老人们讲当年的仗，讲到一半自己先笑。散场时有人说：群还在，就还行。那一夜，国家活过来了。' },
+      { label:'改制：小而精，老而稳', fx:{ qb:5, mx:3 },
+        result:'你宣布了改制：砍掉养不起的部门，缩减值班，把国家改成一个小而稳的样子。有人说这是认输，你说不是——这是过冬。冬天来了，先活下去，春天再说。' },
+      { label:'顺其自然吧', fx:{ mx:-5 }, countFlag:'fade',
+        result:'你没有回复那条消息。第二天，管理员又发了一条：「那我先把群公告改成『暂停活动』吧。」你还是没有说话。有些决定，不做，也是一种决定——最安静的那种。' }
+    ]},
+  E45: { id:'E45', ch:5, date:'2024.3.4', title:'正名之议', cond:function(st){ return recruitLevel(st) === 'none'; },
+    body:[
+      '没有战争，正名的动议却还是来了：赫歇尔这个国号，继承自南十字星，而南十字星的时代早已落幕。有议员提议：改一个属于这个时代自己的名字——新星空合众国。',
+      '菲尔南德也来了。他坐在长桌的另一端，与你平级的位置上，只说了一句：「名字是给活人用的。叫什么都行，别把人再弄丢了。」满座寂静。'
+    ],
+    choices:[
+      { label:'改。就叫新星空合众国——你说的，别再把人弄丢了。', fx:{ mx:5, qb:-3, rh:5 },
+        result:'新国号公布的那天，老人们把旧旗帜小心地收进了档案馆。没有战争逼着他们这样做——是这个国家自己决定，把旧时代放进历史，把新名字留给还愿意回来的人。菲尔南德散会时与你并肩走了一段路，什么都没说。' },
+      { label:'不改。赫歇尔这个名字，留着。', fx:{ qb:3, mx:-3 }, fxAlt:{ stat:'rh', aboveEq:60, fx:{ mx:-3 }, resultSuffix:'新移民那边很快有了反应：名字都不肯改，改革的诚意又在哪里？融合越深的地方，这种别扭反而越明显。' },
+        result:'国号留了下来。前辈们松了口气。可你看着活跃报表想：名字保住了，人呢？这个问题，比改名难得多。' }
+    ]},
+
+  /* ---------- 第六章 新纪元 ---------- */
+  E27: { id:'E27', ch:6, date:'2024.3.15', title:'南下巡访',
+    body:[
+      '战争结束后的第一个春天，你买了机票。广州、深圳、长沙——大量新移民所在的城市，你要一个一个去见。线下面谈的名单排了三页，有人准备了问题，有人只想请你吃顿饭。',
+      '屏幕里的国家吵了三个月。也许把手握在一起，很多话就不用吵了。'
+    ],
+    bodyAlt:{ flag:'noWar', paras:[
+      '没有战争的第一个春天，你还是买了机票。广州、深圳、长沙——老成员和为数不多的新移民所在的城市，你要一个一个去见。名单不长，正好排满一页。',
+      '屏幕里的国家安静了太久。也许把手握在一起，很多话就不用在群里一个字一个字地打了。'
+    ]},
+    choices:[
+      { label:'照计划走完三城', hist:true, fx:{ rh:10, mx:5 },
+        result:'三城走下来，你的嗓子彻底哑了，笔记本记满了两本。回程的飞机上，你看着窗外的云想：这个国家最坚固的部分，从来不是首都，是这些散落在各座城市里、愿意来见你一面的人。' },
+      { label:'只去一城，其余改线上', fx:{ rh:5, mx:3 },
+        result:'一城面谈、两城视频。效果打了折扣，但该传达的诚意传达到了——新移民们要的本来就不多，一个「我来了」的姿态。' },
+      { label:'取消巡访，坐镇本土', fx:{ mx:-3 },
+        result:'机票退了。本土的事务确实千头万绪，只是新移民那边等了很久的那顿饭，就这样凉了。' }
+    ]},
+  E28: { id:'E28', ch:6, date:'2024.4.1', title:'凯瑟琳奈入阁',
+    body:[
+      '一份任命摆在你桌上：凯瑟琳奈，现实中担任英国 CNT&T 跨国公司董事。星空合众国的商务部部长一职虚位已久——实体产业要落地，需要一个真正懂现实商业的人。',
+      '让一个现实世界的高管进入虚拟国家的内阁，这在联邦历史上没有先例。签下它，你们与现实的边界，就正式接通了。凯瑟琳奈在签字前只问了一句：「总统，你希望我做到哪一步？」'
+    ],
+    choices:[
+      { label:'正式入阁。商务部部长——实职，不是虚衔。', hist:true, fx:{ gk:10, wj:3 }, setFlags:['industry'],
+        result:'任命公布，微国圈哗然。凯瑟琳奈上任后做的第一件事，是把联邦的账本按现实公司的标准重做了一遍。从今往后，每个章节国库都会多一笔实体产业的进账。' },
+      { label:'先任顾问。观察一期，再议名分。', fx:{ gk:5 },
+        result:'顾问的头衔稳妥而有限。她带来的方法论让商务部门耳目一新，只是很多事没有名分，就推不动。' },
+      { label:'这份任命，我不能签。界线，暂时不能通。', fx:{},
+        result:'你婉谢了这份可能。虚拟的归虚拟，现实的归现实——这条界线守住了，实体产业的大门也暂时关上了。' }
+    ]},
+  E29: { id:'E29', ch:6, date:'2024.4.20', title:'废除贵族制度', fx:{ qb:-4 }, onEnter:function(st){ return '老贵族们的信先到了。体面话的背后，是前辈阵营整体的寒心——这一步还没走，代价已经摆在桌上。'; },
+    body:[
+      '战后清算的最后一项，摆在了议会桌上：贵族制度。前辈特权的法理根基，就系于此。废了它，前辈时代正式落幕；留着它，新移民九成人口的国家，就永远有一道无形的墙。',
+      '几位老贵族提前给你递了话：他们不闹，只想走得体面一点。你听完，心里更沉了——这个国家亏欠他们的，和他们必须交出的，是同一段历史。'
+    ],
+    bodyAlt:{ flag:'noWar', paras:[
+      '没有战争，清算却一样要来。摆在议会桌上的，是贵族制度。前辈特权的法理根基，就系于此。废了它，前辈时代正式落幕；留着它，这个国家就永远有一道无形的墙。',
+      '几位老贵族提前给你递了话：他们不闹，只想走得体面一点。你听完，心里更沉了——这个国家亏欠他们的，和他们必须交出的，是同一段历史。'
+    ]},
+    choices:[
+      { label:'一刀切，正式废除', hist:true, fx:{ qb:-6, rh:10 }, setFlags:['equality'],
+        result:'废除令通过的那一刻，议会里没有欢呼。前辈席位上，有人把贵族徽章摘下来，轻轻放在桌上，起身离场。新移民的年轻人全体起立，为他们让出通道——这一幕，比任何庆典都更像一个新纪元的开场。' },
+      { label:'废实权，保留荣誉头衔', fx:{ qb:-3, rh:5 },
+        result:'实权收回，头衔保留。老贵族们保住了最后的体面，新移民也拿到了实质的平等。妥协的艺术，大抵如此。' },
+      { label:'分阶段赎买特权', fx:{ gk:-10, qb:3, rh:3 },
+        result:'国库掏出一大笔钱，把特权一项项赎了回来。过程漫长而昂贵，但整个过渡期，没有一个人是被赶走的。' }
+    ]},
+  E30: { id:'E30', ch:6, date:'2024.5.31', title:'北海纪念堂爆破',
+    body:[
+      '深夜，北海纪念堂的方向传来爆炸声。那是前辈特权的最后一个象征物——纪念堂里供着历代功臣的名录，从 Q 虚时代起，一块都没有缺过。',
+      '消防队赶到时，火已经烧穿了屋顶。至此，赫歇尔时代以前的前辈所享有的特权及其象征物，全部消灭。调查组组长站在废墟前，低声问你：查吗？查到底的话，名单上可能会有你认识的名字。'
+    ],
+    choices:[
+      { label:'严查到底，不管是谁', fx:{ mx:-5, qb:-5 }, setFlags:['truthFound'],
+        result:'调查进行了两周。结论送到你桌上时，你盯着那个名字看了很久——果然是自己人，一个在战争里失去了一切的老兵。你把报告合上，在封面上签了「依法处置」。那天晚上你失眠了：这个国家用六年学会了公正，而公正的滋味，原来是这样的。' },
+      { label:'不追究，让历史翻篇', hist:true, fx:{ qb:-3 }, setFlags:['letGo'],
+        result:'你下令封存调查。纪念堂的废墟被清理干净，没有立碑，没有追凶。前辈的时代，就以这样一声闷响，彻底落了幕。有人说你心软，你没有辩解——有些账，翻篇比结清更难。' },
+      { label:'原址改建全民纪念碑', fx:{ gk:-5, mx:5, rh:5 }, setFlags:['monument'],
+        result:'新纪念碑的设计稿上，功臣名录和普通居民的名字刻在同一面墙上，不分先后。奠基那天，几位前辈也来了，站在人群里，看完了全程。' }
+    ]},
+  E31: { id:'E31', ch:6, date:'2024.6.6', title:'第一版明信片',
+    body:[
+      '作坊的灯亮了一整夜。你推门进去时，立言正低着头，把最后一块版压平。他手上全是洗不掉的墨，袖口卷到手肘，桌上晾着一排样张——高川的天际线、星空航宇的徽记、清江的水纹，全是他一笔一笔抠出来的。这个在战争里站到另一边去的人，回来之后没说过一句软话，只是把这间作坊的灯，一盏盏点了起来。',
+      '他把最满意的一张推到你面前，难得地笑了一下：「做出来了。六年了，这个国家第一次有能拿在手里、寄到远方的东西。」他顿了顿，问得很认真：「就一个问题——这批明信片，你打算怎么办？卖，还是不卖？」'
+    ],
+    bodyAlt:{ flag:'noWar', paras:[
+      '作坊的灯亮了一整夜。你推门进去时，立言正低着头，把最后一块版压平。他手上全是洗不掉的墨，袖口卷到手肘，桌上晾着一排样张——高川的天际线、星空航宇的徽记、清江的水纹，全是他一笔一笔抠出来的。他离开过一阵子，又回来了，没说什么，只是把这间作坊的灯，一盏盏点了起来。',
+      '他把最满意的一张推到你面前，难得地笑了一下：「做出来了。六年了，这个国家第一次有能拿在手里、寄到远方的东西。」他顿了顿，问得很认真：「就一个问题——这批明信片，你打算怎么办？卖，还是不卖？」'
+    ]},
+    choices:[
+      { label:'卖。先小批量试水——稳扎稳打地卖。', hist:true, fx:{ gk:5 }, setFlags:['postcard'],
+        result:'立言点点头：「行，急不得。」第一批明信片小批量下单，反响出乎意料地好。七月一日正式发售的计划，就这样被提上了议会的日程。有些和解，不需要说出口——它就晾在作坊的绳子上，一张一张，干透。' },
+      { label:'卖。直接大规模发售——让所有人看见。', special:'e31b', reqStat:{ k:'gk', v:25 }, reqLabel:'需要国库 ≥25（投产要本钱）',
+        result:'' },
+      { label:'不卖。只做内部纪念，送给自己人。', fx:{ mx:3 },
+        result:'明信片成了内部纪念品，小范围地流传。很美，很珍贵——只是外面的世界，暂时还不知道这个国家的存在。' }
+    ]},
+  E315: { id:'E315', ch:6, date:'2024.6.10', title:'归途',
+    body:[
+      '本土完工在即，又有一批老名字出现在离职名单上：这次是几个部门的中坚，有人要去外地工作，有人要回去照顾家里。管理员照例来问你：留，还是放？',
+      '你想起去年冬天自己说过的话。门口的那盏灯，还亮着吗？'
+    ],
+    choices:[
+      { label:'留一盏灯，等他们回来', hist:true, special:'e315a',
+        result:'' },
+      { label:'逐个挽留，尽人事', fx:{ gk:-5, mx:3 }, reqStat:{ k:'gk', v:15 }, reqLabel:'需要国库 ≥15',
+        result:'你又挨个发了一遍消息。留下的有，走的也有。走的人在离境频道里排了一排「保重」，管理员把他们的工位原样留着，落灰也不撤。' },
+      { label:'下令召回，国家用人之际', fx:{ mx:-5, qb:-5, rh:-5, gz:-5 }, countFlag:'recall', confront:true,
+        result:'召回令第二次发了出去。回来的人站在工位前，眼神里多了点说不清的东西。你开始分不清：这个国家聚人的，到底是灯，还是命令？' }
+    ]},
+  E32: { id:'E32', ch:6, date:'2024.6.12', title:'开放与完工',
+    body:[
+      '六月十二日，两件大事落在同一天。仙王座边境口岸成立：严格审核之下，Q 虚移民的入境通道正式开放——既要安全，又要新血，这是你们用五次战争换来的平衡点。',
+      '次日，历经六年风雨的本土建设，最终完工。科幻建设的大幕拉开。第 35 届议会正在拟定最后的决议：七月一日，明信片等文创正式对外发售，同时开展游戏 mod 制作。终点，还是起点？'
+    ],
+    bodyAlt:{ flag:'noWar', paras:[
+      '六月十二日，两件大事落在同一天。仙王座边境口岸成立：严格审核之下，Q 虚移民的入境通道重新开放——门关了太久，这一次，你们要学着在安全与新血之间，走一条中间的路。',
+      '次日，历经六年风雨的本土建设，最终完工。科幻建设的大幕拉开。第 35 届议会正在拟定最后的决议：七月一日，明信片等文创正式对外发售，同时开展游戏 mod 制作。终点，还是起点？'
+    ]},
+    choices:[
+      { label:'双线并进：科幻建设＋文创发售', hist:true, fx:{ gk:5, wj:5 }, setFlags:['dualLine'],
+        result:'决议通过。建设与文创，两条腿一起迈进了新纪元。你站在完工的本土最高处，看着脚下这座从聊天群里长出来的城市——六年了。它活下来了，而且活得比谁都像一个真正的国家。' },
+      { label:'科幻优先，文创缓行', fx:{ aq:5 },
+        result:'资源集中投向科幻建设。星舰的图纸在设计院里堆成了山，文创的发售则被推到了下一个季度。' },
+      { label:'文创优先，先赚钱再建设', fx:{ gk:10, mx:-3 },
+        result:'发售计划提前了，国库的进账肉眼可见地涨了起来。只是建设工地上，有年轻人嘀咕：我们建国，到底是为了星辰大海，还是为了卖货？' }
+    ]}
+  };
+
+  /* ================= 章节卡与插页 ================= */
+  function chapterTick(notes){
+    return function(st){
+      var out = [];
+      var d = {};
+      function add(fx, msg){ var dd = applyFx(st, fx, null); mergeDeltas(d, dd); if (msg) out.push(msg); }
+      if (notes === 'ch4'){
+        if (st.flags.econ) add({ gk:4 }, '经济改革的齿轮转了起来：国库 +4。');
+        if (st.flags.armyAuto) add({}, '镇压的遗产：那支代管的军队还在替联邦站岗。此后，联邦的安全选项更硬了，只是每一次动用它，人心的账都记得更重。');
+      }
+      if (notes === 'ch5'){
+        if (st.flags.econDelay) add({ gk:-8, mx:-3 }, '当年搁置的经济改革在此刻露出了代价：物资紧张，国库 -8，民心 -3。');
+        if (st.flags.visaStrict) add({ rh:-5 }, '当年的严签证政策让新移民基数偏低：融合度 -5。');
+        if (st.flags.warned) add({ mx:3 }, '跨年总结大会的预警起了作用，人们对冲突有了心理准备：民心 +3。');
+        if (st.flags.econ) add({ gk:4 }, '经济改革持续供血：国库 +4。');
+        if (!st.flags.armedStruggle && !st.flags.coupStrong){
+          if (recruitLevel(st) === 'full'){ st.flags.swamped = true; add({ qb:-12 }, '淹没：只是这一回，联邦缺了一样东西——一个共同的敌人。七月的风波平息得太轻易，老人们从没被逼着真正站到一起；等新移民像潮水一样涌进来时，他们才发现，自己已经是这个国家里的少数派了。前辈满意度 -12。'); }
+          else if (recruitLevel(st) === 'some'){ add({ qb:-6 }, '新移民来了不少，可七月的风波平息得太轻易，老人们始终没真正抱成团。人数一变，前辈们的声音肉眼可见地小了下去。前辈满意度 -6。'); }
+        }
+        if (st.flags.cornExiled && !st.flags.openTalk) add({ qb:-3 }, '驱逐的回声：边疆那道伤口一直没有愈合。前辈满意度 -3。');
+        if (st.stats.gk >= 80 && !st.flags.xinxiang && !st.flags.econBoost) add({ mx:-3 }, '国库的诅咒：钱多到花不完的那一年，人心反而散了——大家开始觉得，这个国家不再需要自己。民心 -3。');
+        if ((st.flags.lampCount || 0) > (st.flags.lampPaid || 0)){ var lp5 = (st.flags.lampCount || 0) - (st.flags.lampPaid || 0); st.flags.lampPaid = st.flags.lampCount; add({ mx:3 * lp5 }, '留灯的复利：门口那盏灯起了作用，又有离开的人悄悄回来了。民心 +' + (3 * lp5) + '。'); }
+      }
+      if (notes === 'ch5b'){
+        st.flags.noWar = true;
+        add({ mx:-3 }, '没有新血的联邦，活跃度在缓慢下滑：民心 -3。');
+        if (st.flags.econ) add({ gk:4 }, '经济改革持续供血：国库 +4。');
+      }
+      if (notes === 'ch6'){
+        if (st.flags.econ) add({ gk:4 }, '经济改革持续供血：国库 +4。');
+        if (st.flags.econBoost) add({ gk:4 }, '经济共同体的红利到账：国库 +4。');
+        if (st.flags.industry) add({ gk:6 }, '实体产业开始盈利：国库 +6。');
+        if (st.flags.talentLost) add({ gk:-5 }, '那位离开的建设人才留下的空缺，至今无人能补：国库 -5。');
+        if (st.flags.cornExiled && !st.flags.openTalk) add({ qb:-3 }, '驱逐的回声：新纪元的第一天，边疆那道伤口还是没有愈合。前辈满意度 -3。');
+        if (st.stats.gk >= 80 && !st.flags.postcard && !st.flags.econBoost && !st.flags.dualLine) add({ mx:-3 }, '国库的诅咒：当钱不再是问题，人与人之间的距离反而成了问题。民心 -3。');
+        if ((st.flags.lampCount || 0) > (st.flags.lampPaid || 0)){ var lp6 = (st.flags.lampCount || 0) - (st.flags.lampPaid || 0); st.flags.lampPaid = st.flags.lampCount; add({ mx:3 * lp6 }, '留灯的复利：门口那盏灯起了作用，又有离开的人悄悄回来了。民心 +' + (3 * lp6) + '。'); }
+      }
+      st._lastTickDeltas = d;
+      return out.join('\n');
+    };
+  }
+
+  var CHAPTERS = {
+    CH1:{ kind:'chapter', ch:1, title:'第一章 · 建制', date:'2023.2 – 2023.4',
+      body:['2023 年初。赫歇尔联邦——南十字星的继承者——正在把自己从一个热闹的社群，改造成一个有法律、有军队、有外交的国家。','你坐在总统的位置上。桌上是新刑法的草案，窗外是整个星空。'] },
+    CH2:{ kind:'chapter', ch:2, title:'第二章 · 联盟', date:'2023.5 – 2023.6',
+      body:['联邦的旗帜开始出现在大使馆区域的每一个角落。朋友在变多，账本在变薄，世界在变大。','这一章没有敌人。只有选择。'] },
+    CH3:{ kind:'chapter', ch:3, title:'第三章 · 政变', date:'2023.7',
+      body:['七月。议会、军营、街头，所有矛盾在一个夏天里同时引爆。','这一章里你要先学会一件事：输掉位置，不等于输掉一切。'] },
+    CH4:{ kind:'chapter', ch:4, title:'第四章 · 建设', date:'2023.8 – 2023.12', onEnter:chapterTick('ch4'),
+      body:['政变过后，日子还要过。首都的重建、服务器的灯火、五周年的庆典——一个国家在废墟上重新学习生活。','而在所有报表底下，有一条曲线在悄悄爬升：新移民的比例。'] },
+    CH5:{ kind:'chapter', ch:5, cond:function(st){ return recruitLevel(st) === 'full'; }, title:'第五章 · 五次前新战争', date:'2024.1 – 2024.3', onEnter:chapterTick('ch5'),
+      body:['新移民人口占比已超百分之九十，前辈的特权依旧存在。战争，终于爆发了。','从这一章起，你的每一次裁决都会记入一个隐藏的数值——公正度。全民都在看着，它会影响这个国家最终如何评价你。'] },
+    CH5S:{ kind:'chapter', ch:5, cond:function(st){ return recruitLevel(st) === 'some'; }, title:'第五章 · 五次前新战争', date:'2024.1 – 2024.3', onEnter:chapterTick('ch5'),
+      body:['新移民人口占比约百分之七十——没有压倒性的多数，前辈的特权却依旧存在。摩擦没有缺席，只是规模小了一号：五次前新战争，还是来了。','从这一章起，你的每一次裁决都会记入一个隐藏的数值——公正度。全民都在看着，它会影响这个国家最终如何评价你。'] },
+    CH5B:{ kind:'chapter', ch:5, cond:function(st){ return recruitLevel(st) === 'none'; }, title:'第五章 · 寂静的冬天', date:'2024.1 – 2024.3', onEnter:chapterTick('ch5b'),
+      body:['新移民没有大规模到来。联邦还是那群老人的联邦：安静、熟悉，也一天天地变老。人口没有逆转，特权没有对手，战争自然也没有发生。','这一章没有敌人。只有时间——和一份每个月都在变薄的活跃报表。'] },
+    CH6:{ kind:'chapter', ch:6, cond:function(st){ return recruitLevel(st) !== 'none'; }, title:'第六章 · 新纪元', date:'2024.3 – 2024.6', onEnter:chapterTick('ch6'),
+      body:['战争停了。剩下的问题是：一个打过五次内战的国家，要怎么继续活下去？','这一章没有敌人。只有废墟、春天，和必须做完的告别。'] },
+    CH6B:{ kind:'chapter', ch:6, cond:function(st){ return recruitLevel(st) === 'none'; }, title:'第六章 · 新纪元', date:'2024.3 – 2024.6', onEnter:chapterTick('ch6'),
+      body:['没有战争的春天。剩下的问题是：一个慢慢变老的国家，要怎么继续活下去？','这一章没有敌人。只有春天、旧人，和必须做完的告别。'] }
+  };
+
+  var INTERLUDES = {
+    I01:{ kind:'interlude', date:'2023.3.4', title:'编年史插页', text:'刑法修订后，再度于议会通过。联邦的法典，在一遍遍的争吵里慢慢长出了牙齿。' },
+    I02:{ kind:'interlude', date:'2023.8.26', title:'编年史插页', text:'联邦首次确立官方节日日程。建国日、民主纪念日……一个国家开始有了自己的时间。' },
+    I03:{ kind:'interlude', date:'2023.8.31', title:'编年史插页', text:'行政院长戈梦提出新的发展方案。这位以稳健著称的行政院长，是联邦运转的中轴——无论谁当总统，戈梦的方案总会准时出现在桌上。' },
+    I04:{ kind:'interlude', date:'2023.9.20', title:'编年史插页', text:'联邦与友邦星际联邦达成协议，共同维护的轨道空间站在设定图上点亮了第一盏灯。科幻的种子，埋下了。' },
+    I05:{ kind:'interlude', date:'2023.10.6', title:'编年史插页', text:'联邦与星际联邦的外交官在东京新宿举行线下会谈。虚拟国家的使节，在现实的居酒屋里碰了杯。' },
+    I06:{ kind:'interlude', date:'2023.11.17', title:'编年史插页', text:'由 Malachite 创办的云屏科技大学落成。联邦的第二所大学——也是新移民自己的第一所大学：从此他们有了自己的学术、自己的上升通道，不再只是借住在前辈的屋檐下。揭幕那天，她站在新楼前问你：「楼盖起来了，人从哪来？你是打算继续往外喊、让人看见我们，还是先把在的人留住？」你还没来得及回答——几天后，官方账号破千的消息就到了。' },
+    I07:{ kind:'interlude', date:'2023.12.20', title:'编年史插页', text:'联邦第一部观光旅游网站搭建完成。次日，联邦与英国微国家 Gosland 建交。世界又大了一点。' },
+    I08:{ kind:'interlude', date:'2024.1.25', cond:function(st){ return recruitLevel(st) !== 'none'; }, title:'编年史插页', text:'前辈回归潮渐渐退去。一些前辈和新移民在部分问题上产生矛盾——为后期的冲突，埋下了伏笔。' },
+    I17:{ kind:'interlude', date:'2024.2', cond:function(st){ return recruitLevel(st) !== 'none'; }, title:'编年史插页', text:'那年冬天，云屏科技大学发出一则紧急通告。Admin 动用杂务权限，绕过校议会，立即实装「冬令时」（Winter Time Extending）机制：校内所有封闭场所，温度锁定在 23 度以上；日落之后，照明锁定为温和日光的亮度；公共区域的灯，一直亮到第二天的太阳升起。通告的最后写着：「再次为这份通告对诸位生活的侵入致歉。但请保持在线。请保持在线。这个冬天，不要再有人离开我们。」外面在驱逐、在开战——她在把灯调亮。' },
+    I16:{ kind:'interlude', date:'2024.1.25', title:'编年史插页', cond:function(st){ return recruitLevel(st) === 'none'; }, text:'群公告的阅读量，第一次跌破了三位数。管理员在日志里写：不是没人爱这个国家了，是大家的日子，都被现实排满了。' },
+    I09:{ kind:'interlude', date:'2024.3.19', title:'编年史插页', text:'微国家波比无理由对联邦盟国猫猫尼西亚提出无理要求。联邦当即表态：协助盟友守土。对方至今没有行动。' },
+    I10:{ kind:'interlude', date:'2024.4.10', title:'编年史插页', text:'日本公民桦时、东云分别被任命为东海岸防区长官与东海特区总督。次日，回归的前辈特洛伊被任命为宣传总署长。新一届议会，同日召开。' },
+    I11:{ kind:'interlude', date:'2024.4.29', title:'编年史插页', text:'第 33 届议会召开，大量不作为的官员被撤职。战后的人事清洗，安静而彻底。' },
+    I12:{ kind:'interlude', date:'2024.5.24', title:'编年史插页', text:'小诺加入星空合众国，担任文创部长，做出了大量贡献。新纪元的文化页，翻开了。' },
+    I13:{ kind:'interlude', date:'2024.5.25', title:'编年史插页', cond:function(st){ return !st.flags.noWar; }, text:'因战争停摆的 Minecraft 服务器重建成功，北部城市的轮廓在方块世界里重新亮起。' },
+    I13B:{ kind:'interlude', date:'2024.5.25', title:'编年史插页', cond:function(st){ return !!st.flags.noWar; }, text:'Minecraft 服务器例行重建完成，北部城市的轮廓在方块世界里重新亮起。这一次没有战争打断它——重建，就只是重建。' },
+    I14:{ kind:'interlude', date:'2024.6.9', title:'编年史插页', text:'由前总理猫猫创建的猫滨城，作为浮岛漂浮在东海岸。这位早已退居二线的前总理，用一座城的方式，继续守着这个国家。' },
+    I15:{ kind:'interlude', date:'2024.6.14', title:'编年史插页', text:'星空航宇大学在星际联邦支援下成立，成为联邦第二个正式运作的网络大学。六年风雨，本土完工，科幻启程。' },
+    X03:{ kind:'interlude', date:'2023.9', title:'残部之影', cond:function(st){ return !!st.flags.remnant; }, fx:{ aq:-5, mx:-3 },
+      text:'谈判桌上撤走的人，并没有走远。九月的一个深夜，四人组残部在边境频道煽动了一场短暂的骚动，很快被压了下去。首都无恙，只是所有人都被提醒了一次：有些账，真的只是延期，不是取消。' }
+  };
+
+  /* ================= 流程 ================= */
+  var FLOW = [
+    CHAPTERS.CH1, 'E01', 'I01', 'E02', 'E03',
+    CHAPTERS.CH2, 'E04', 'E05',
+    CHAPTERS.CH3, 'E06', 'E07', 'E08', 'X01', 'X02', 'E09',
+    CHAPTERS.CH4, 'E10', 'X03', 'E11', 'I02', 'I03', 'E12', 'I04', 'I05', 'E13', 'E14', 'I06', 'E15', 'E155', 'E16', 'I07', 'E17',
+    CHAPTERS.CH5, CHAPTERS.CH5S, CHAPTERS.CH5B, 'E18', 'E19', 'E20', 'I08', 'I17', 'E21', 'E22', 'E23', 'E23S', 'E24', 'E25', 'E25S', 'E26', 'E41', 'I16', 'E42', 'E43', 'E44', 'E45',
+    CHAPTERS.CH6, CHAPTERS.CH6B, 'E27', 'I09', 'E28', 'I10', 'E29', 'I11', 'I12', 'I13', 'I13B', 'E30', 'E31', 'I14', 'E315', 'E32', 'I15'
+  ];
+
+  function resolveNode(ref){
+    if (typeof ref === 'string'){
+      if (EVENTS[ref]) { var e = EVENTS[ref]; e.kind = 'event'; return e; }
+      if (INTERLUDES[ref]) { var n = INTERLUDES[ref]; if (!n.id) n.id = ref; return n; }
+      return null;
+    }
+    return ref;
+  }
+
+  /* 当前应显示的节点（自动跳过 cond 不满足者）；无则返回 null */
+  function nodeAt(st){
+    while (st.idx < FLOW.length){
+      var node = resolveNode(FLOW[st.idx]);
+      if (!node) { st.idx++; continue; }
+      if (node.cond && !node.cond(st)) { st.idx++; continue; }
+      if (node.kind === 'event' && node.exile && !st.flags.exileLine) { st.idx++; continue; }
+      return node;
+    }
+    return null;
+  }
+
+  /* 进入章节/插页节点：应用 onEnter 与 fx（只应用一次） */
+  function enterNode(st){
+    var node = nodeAt(st);
+    if (!node) return null;
+    if (st.enteredFor !== st.idx){
+      st.enteredFor = st.idx;
+      st.pendingNote = '';
+      st._tickDeltas = {};
+      if (node.onEnter) st.pendingNote = node.onEnter(st) || '';
+      if (node.fx){ var d = applyFx(st, node.fx, null); st._tickDeltas = d; }
+      if (st.stats.mx <= 0 && !st.ending){ st.ending = 'wangguo'; st.finished = true; }
+      if (!st.ending && node.kind === 'chapter' && node.ch === 6){
+        if (dissolutionCollapsed(st)){ st.ending = 'jieti'; st.finished = true; st._dissolveText = DISSOLVE_TEXT.CH6; }
+        else if (!st.flags.confronted && dissolutionLoose(st)){ st.ending = 'jieti'; st.finished = true; st._dissolveText = DISSOLVE_TEXT.FADE; }
+      }
+    }
+    return node;
+  }
+
+  function leaveNode(st){
+    st.idx++;
+    st.enteredFor = -1;
+    st.pendingNote = '';
+    if (!st.ending && !nodeAt(st)){ st.finished = true; st.ending = computeEndingId(st); }
+  }
+
+  function choiceEnabled(st, ev, ci){
+    var c = ev.choices[ci];
+    if (!c) return false;
+    if (c.reqFlag && !st.flags[c.reqFlag]) return false;
+    if (c.reqStat && st.stats[c.reqStat.k] < c.reqStat.v) return false;
+    return true;
+  }
+  function enabledChoices(st, ev){
+    var out = [];
+    for (var i=0;i<ev.choices.length;i++) if (choiceEnabled(st, ev, i)) out.push(i);
+    return out;
+  }
+
+  /* 招新程度：由 E11/E12/E15 的选择累积 recruitPts 决定。>=0 全面招新（史实线）；-1 部分招新；<=-2 几乎没招新 */
+  function recruitLevel(st){
+    var p = st.flags.recruitPts || 0;
+    if (p <= -2) return 'none';
+    if (p === -1) return 'some';
+    return 'full';
+  }
+
+  function histLabelOf(ev){
+    for (var i=0;i<ev.choices.length;i++) if (ev.choices[i].hist) return ev.choices[i].label;
+    return null;
+  }
+
+  /* ================= 特殊判定 ================= */
+  function special(st, ev, ch, outcome){
+    var s = st.stats, f = st.flags;
+    function addFx(fx){ mergeDeltas(outcome.deltas, applyFx(st, fx, outcome)); }
+    function setText(t){ outcome.text = t; }
+
+    if (ch.special === 'e06b'){
+      if (s.mx >= 50){
+        addFx({ qb:-10, gz:-5, aq:-5, mx:5 }); f.coupWeakened = true;
+        setText('你当场宣布罢免程序违规。会场大乱，但民众的支持让你站住了脚——罢免被搁置，你保住了位置。代价是议会从此分成两半，前辈们看你的眼神里，多了一层寒意。四人组的根基，也在这场撕裂里被提前削去了一角。');
+      } else {
+        addFx({ mx:-10, qb:5 }); f.stepDown = true;
+        setText('你拒绝承认，可表决器不会说谎。安保人员客气而坚决地请你离场——你被强制退位了，而且是以最难看的方式。走廊里，菲尔南德拦住你，只说了一句：「回来时，别带恨。」你记下了。');
+      }
+    }
+    if (ch.special === 'e06c'){
+      if (s.mx >= 60){
+        addFx({ mx:5, qb:-5 }); f.reelected = true;
+        setText('解散令签下的那一刻，整个联邦屏住了呼吸。重选的结果三天后出来：你赢了。民意亲手把你送回总统府——只是前辈们从此认定，你是一个「为了位置什么都敢做」的人。');
+      } else {
+        addFx({ mx:-10, qb:5 }); f.stepDown = true;
+        setText('重选的票数没有站在你这边。或者说，你高估了自己在民众心里的分量。你以比罢免更狼狈的方式离开了总统府，威望大损。车长接任时，甚至没有等你收拾完办公室。');
+      }
+    }
+    if (ch.special === 'e08a'){
+      f.armedStruggle = true;
+      var bonus = 0, notes = [];
+      if (f.network){ bonus += 10; notes.push('暗中串联的网络在关键时刻全部接通'); }
+      if (f.coupWeakened){ bonus += 10; notes.push('四人组的根基早在罢免之夜就被削弱'); }
+      if (f.reelected){ bonus += 5; notes.push('重选的胜利让你的号召有了民意的底气'); }
+      if (f.target){ bonus -= 5; notes.push('你身为镇压的首要目标，行动处处受制'); }
+      if (f.coupStrong){ bonus -= 10; notes.push('这一个月的沉默，让四人组坐大了声势'); }
+      var fernando = (s.mx >= 45);
+      if (fernando){ bonus += 10; notes.push('菲尔南德带着他的私人卫队到了——人心还在，他就不能不在。卫队的加入，让首都的天平第一次向你倾斜'); }
+      var total = s.mx + s.aq - s.yh * 8 + bonus;
+      outcome.checkInfo = { total: total, need: 70, fernando: fernando };
+      if (s.mx >= 45 && total >= 70){
+        addFx({ mx:5, aq:5 });
+        setText('号召发出的那一刻，整个联邦都动了。' + (notes.length ? notes.join('；') + '。' : '') + '民众涌上街头与频道，镇压的命令链在人海面前一段段断裂。玉米冲在最前面——很多年后你回想这一夜，最先想起的总是这个画面。四人组被推翻，车长在指挥室里被自己的士兵请了出去——他没有反抗，只是把军帽端端正正放在桌上。你重返执政。这个国家刚刚证明：它的主人，从来不是枪。');
+      } else {
+        st.ending = 'zhenya'; st.finished = true;
+        setText('号召发出去了，但回应的人不够多。' + (s.mx < 45 ? '菲尔南德没有来。后来你才懂：人心没到的地方，他不会拿卫队去填——他护人，从不护一场必输的仗。' : '') + (s.yh >= 2 ? '那支被代管的军队展现了惊人的效率——它早已只听一方的命令。' : '镇压的机器一旦开动，人心的集结终究慢了一步。') + '天亮之前，临时指挥点被攻破。你被送上了离开联邦的车，车长的人甚至没有为难你——「总统说，您毕竟是缔造者。」车窗外，首都的灯一盏盏熄灭。镇压，成功了。');
+      }
+    }
+    if (ch.special === 'e08c'){
+      f.exileLine = true;
+      setText('你选择了离开。不是逃跑——你说服自己：只要人还在，政府就还在。临走前你在公告里写：「联邦不在首都，联邦在每一个还愿意回来的人心里。」当晚，流亡政府在海外的第一间办公室里，亮起了灯。');
+    }
+    if (ch.special === 'x02'){
+      if (s.mx >= 70){
+        addFx({ mx:-10 }); f.exileLine = false; f.exileReturn = true;
+        setText('时机到了。本土的民众自发打开了城门——你回国的车队驶入高川市时，街道两旁站满了举着灯的人。回归的代价是真实的：流亡期间积累的裂痕、被架空的班底、虎视眈眈的临时当局残部。但你回来了。而回来的第一晚，就出了大事。');
+      } else {
+        st.ending = 'liuwang'; st.finished = true;
+        setText('你算了一遍又一遍：民心未至，窗口未开。回国变成了长期的等待，等待又变成了一种生活。流亡政府的公告还在发，议会还在开，只是每一年，名册都比上一年薄一点。很多年后，有人问起星空合众国，老人会说：它还在——在海外，在纸上，在我们心里。只是再也，没有回去。');
+      }
+    }
+    if (ch.special === 'e10b'){
+      if (Math.random() < 0.5){
+        addFx({ wj:-5 });
+        setText('你选择了沉默。但谣言不会因为沉默而死——它发酵了整整一周，几个友邦发来措辞委婉的关切函。等你终于决定回应时，叙事的先机已经丢了一半。');
+      } else {
+        setText('你按兵不动。对方的谣言因为得不到回应，三天后就自己散了——没有对手的拳击台，观众是最先离场的。这一次，沉默赢了。');
+      }
+    }
+    if (ch.special === 'e18b'){
+      if (s.aq >= 55){
+        addFx({ wj:5, aq:-5 });
+        setText('联邦的舰队（以及频道里的舰队）开进了争议海域。玉米掂量了三天，退了。巴巴多斯回到了联邦版图——只是玉米退走时留下的那句话传遍了前辈的圈子：「总统的炮口，第一次对准了自己人。」');
+      } else {
+        addFx({ aq:-10, mx:-5 }); f.cornPush = true;
+        setText('对峙的结果很难看：联邦的武装力量在玉米的老兵面前露了怯，不得不后撤。巴巴多斯丢了，还附赠了一场耻辱。前辈的圈子里，笑声传了很久。');
+      }
+    }
+    if (ch.special === 'e23a'){
+      var fx = { qb:-15, rh:10, gz:5 };
+      if (f.privilege) fx.qb -= 3;
+      if (f.misunderstanding) fx.qb -= 5;
+      if (f.eldersShock) fx.gz -= 3;
+      addFx(fx); f.cornExiled = true;
+      setText('判决生效的那天，西南离岛城市群几乎全员被赶往边疆——驱逐令上写的只有玉米一个人的名字，执行下去时，却是一整片人的迁徙。你站在港口的名单前，听着行李箱轮子滚过石板路的声音，一声，又一声。没有人欢呼。绘图者保住了他的尊严，这个国家保住了它的法律，而你保住的，是深夜里一遍遍问自己的那句：除了这样，还有别的路吗？也许有。但那天，你没能找到。这就是驱逐的真相——它从来不是凯旋，是一道这个国家要疼很多年的伤口。');
+    }
+    if (ch.special === 'e24a'){
+      f.openTalk = true;
+      if (s.mx >= 55){
+        addFx({ rh:5, qb:5, gz:5 });
+        setText('大会开了整整一天。老人们讲当年的仗，年轻人讲现在的委屈，讲到动情处，有人把攒了半年的狠话咽了回去。散场时，一位 Q 虚时代的老人物拉住你：「肯听我们说完，就还行。」民心，稳住了。');
+      } else {
+        addFx({ mx:-5, rh:-5 });
+        setText('大会开成了控诉会。积怨太深，你的民望又撑不住场面——老人们拂袖而去，年轻人冷笑连连。你把话摆上了桌面，却发现桌面本身，已经裂了。');
+      }
+    }
+    if (ch.special === 'e25a'){
+      var fx2 = { mx:-10, aq:-5 }; fx2.aq += 5;
+      if (f.suppress) fx2.mx -= 5;
+      addFx(fx2); f.capitalDissolved = true;
+      setText('解散令是你亲手签的。首都的频道一个个熄灯，人们抱着自己的数据和回忆，散入各个边疆区。没有爆炸，没有流血，只有一个国家在深夜里亲手拆掉了自己的心脏——为了保住身体。第十三次亡国危机，就这样以最痛的方式度过。很多年后，史书会为这一页争论不休：这是懦弱，还是一个领袖能做出的、最勇敢的决定？你不知道答案。你只知道那天晚上，你一个人在空掉的首都频道里，坐到了天亮。');
+    }
+    if (ch.special === 'e25b'){
+      if (s.mx + s.aq >= 110){
+        addFx({ mx:-15 }); f.holdCapital = true;
+        setText('你拒绝解散。首都的每一扇门后都站了人，每一条频道都通宵亮着。第五次战争的浪头撞上来，一次比一次高，又一次次被挡回去。天亮时，首都还在——残破、疲惫、满目疮痍，但还在。惨胜。这两个字，是你用无数人的眼泪换来的。');
+      } else {
+        st.ending = 'wangguo'; st.finished = true;
+        setText('你选择了死守。但人心与防线，总有一条先垮。第五次战争的浪头漫过首都的最后一刻，频道里最后一条消息是管理员发的：「对不起，我们尽力了。」首都陷落，建制崩解，星空合众国——这个从 2018 年一路走来的名字，在 2024 年的春天，停在了这里。第十三次亡国危机，成了最后一次。');
+      }
+    }
+    if (ch.special === 'e25sb'){
+      if (s.mx + s.aq >= 100){
+        addFx({ mx:-8 }); f.holdCapital = true;
+        setText('你拒绝关停。首都的每一条频道都通宵亮着，两边的人吵累了、骂累了，天亮时发现对方还坐在对面——那就谈吧。首都守住了。这一夜没有赢家，只有没散的人。');
+      } else {
+        st.ending = 'jieti'; st.finished = true;
+        setText('你选择了死守。但这一世的国家小了一号，人心与防线都比历史上薄。浪头漫过来的那一刻，没有爆炸，没有陷落——是人先走光了。管理员的最后一条消息停在深夜：「对不起，我们尽力了。」然后，群安静了。');
+      }
+    }
+    if (ch.special === 'e31b'){
+      if (s.gk >= 50){
+        addFx({ gk:15 }); f.postcard = true;
+        setText('你赌了一把：大批量投产。结果七月一日发售当天，第一批明信片被一抢而空。国库久违地鼓了起来——立言的手艺和你的胆量，缺一不可。');
+      } else {
+        addFx({ gk:-10, mx:-3 });
+        setText('摊子铺得太大，国库的底子没跟上。库存压在仓库里，账上的数字很难看。年轻人安慰你：东西是好东西，就是这个国家，还没学会怎么做生意。');
+      }
+    }
+    if (ch.special === 'e315a'){
+      f.lampLate = true;
+      if (f.lamp){
+        addFx({ mx:8, rh:3 });
+        setText('你依然选择了留灯。而这一次，去年冬天走的一位老成员，恰好在这天回来了——他说他在外地忙完，半夜翻到那句「离开过也没关系，星星会等你」，哭了一场，第二天就买了票。灯，就是这样用的。');
+      } else {
+        addFx({ mx:3, rh:3 }); f.lamp = true;
+        setText('你没有发挽留令，只让管理员保留他们的权限和位置。公告的最后一行写着：「离开过也没关系，星星会等你。」');
+      }
+    }
+  }
+
+  /* ================= 群体解体判定 =================
+     这个社群的底子是一个 QQ 群。有些危机不会以「陷落」收场，而是以「散伙」收场：
+     在大危机节点上，若民心见底、或前辈与新移民两边同时凉透，群会在一夜之间安静下来。 */
+  var DISSOLVE_TEXT = {
+    E08:'\n\n镇压平息了，总统府也夺回来了。可接下来的一个星期，群里的人一个接一个地退：先是旁观者，然后是中坚，最后连值班表都排不满。没有人宣布解散——只是有一天，最后一条消息停在深夜，再也没有下文。这个国家没有亡于镇压，它亡于人心散尽。',
+    E24:'\n\n第四次战争还没打完，人就先走光了。前辈的群退了，新移民的频道也空了，管理员的调解消息发出去，只有零星几个「收到」。第五次战争没有发生——不是被平息了，是没有人了。这个从聊天群里长出来的国家，以最安静的方式，散了。',
+    E25:'\n\n首都保住了，或者解散了——都不重要了。战争结束的那天晚上，各个频道的人加起来凑不齐一桌。前辈走了，新移民也走了，留下的人对着满屏灰色的头像，忽然明白：国家不是死于哪一场战争，是死于所有人同时决定不再回来。群，还在；人，散了。',
+    E25S:'\n\n这一仗规模不大，散伙却散得彻底。火势小，人心凉得反而更快——前辈嫌没意思，新移民嫌没前途，两边在同一个星期里各自退群。没有告别，没有挽留。这个国家最后一条消息是管理员发的：「都保重。」',
+    E44:'\n\n那个「不如解散了吧」的提议，最终没有人反对。不是大家同意解散——是连反对的力气，都没有人愿意花了。管理员解散了群。没有仪式，没有合影，人们散回各自的考试、工作和城市里。很多年后有人建了个新群想把大家拉回来，拉到一半，停住了：有些灯，亮过就够了。',
+    E21:'\n\n第一场战争还没分出胜负，人就先散了。没有共同敌人锻打过的联邦，凝聚力薄得像一层冰：前辈嫌自己成了外人，新移民嫌自己永远是客，两边在同一周里先后退了群。群还在，公告还挂着，只是再也没有人点开。',
+    CH6:'\n\n新纪元的第一天，阳光很好。只是群里安静得不对劲：公告发出去，半天没有一条回复；值班表上的人名，一个接一个变成了灰色。没有人宣布解散——人们只是在新时代的门口站了站，又各自转身回了自己的生活。这个国家熬过了战争，却没能熬过和平。',
+    FADE:'\n\n你从没对谁红过脸，也从没真正拦过谁。于是离开这件事，在这里变得格外容易：没有争吵，没有挽留，连告别都省了。群里的人像温水里的蒸汽，无声无息地薄下去。等你回过神来时，杯子已经空了。',
+    RECALL:'\n\n被硬拉回来的人，先掀了桌子。他们把这些年的委屈一条一条念完，头也不回地走了——还带走了原本还在犹豫的人。灯能把人引回来，绳子只能把人拖回来；而被拖回来的人，手里攥着的，是绳子的另一头。'
+  };
+  /* 凝聚力崩塌：留灯时门槛收紧 3 点（总有人惦记着回来）；集体反抗后放宽 20 点（人心已散） */
+  function dissolutionCollapsed(st){
+    var s = st.stats;
+    var buf = st.flags.lamp ? 3 : 0;
+    var loose = st.flags.pushbackFired ? 20 : 0;
+    return (s.mx <= 25 - buf + loose) || (s.qb <= 20 - buf + loose && s.rh <= 35 - buf + loose) || ((s.qb + s.rh) <= 60 - buf + loose);
+  }
+  /* 温水蒸发：从未对抗过的国家，连崩塌都是安静的——门槛再放宽 5 点 */
+  function dissolutionLoose(st){
+    var s = st.stats;
+    var buf = st.flags.lamp ? 3 : 0;
+    return (s.mx <= 30 - buf) || (s.qb <= 25 - buf && s.rh <= 40 - buf) || ((s.qb + s.rh) <= 65 - buf);
+  }
+  function dissolutionCheck(st, ev, outcome){
+    if (st.ending) return;
+    var s = st.stats;
+    var collapsed = dissolutionCollapsed(st);
+    var hit = false;
+    if (ev.id === 'E08' || ev.id === 'E24' || ev.id === 'E25' || ev.id === 'E25S') hit = collapsed;
+    if (ev.id === 'E44') hit = collapsed || ((st.flags.fade || 0) >= 3) || (((st.flags.fade || 0) >= 2) && s.mx <= 65);
+    if ((ev.id === 'E21' || ev.id === 'E22') && st.flags.swamped && !st.flags.swampChecked){ st.flags.swampChecked = true; hit = collapsed; }
+    if (st.flags.pushbackFired) hit = collapsed;
+    if (hit){
+      st.ending = 'jieti'; st.finished = true;
+      outcome.text += (DISSOLVE_TEXT[ev.id] || (st.flags.pushbackFired ? DISSOLVE_TEXT.RECALL : DISSOLVE_TEXT.E25));
+    }
+  }
+
+  /* ================= 选择处理 ================= */
+  function choose(st, ci){
+    var ev = nodeAt(st);
+    if (!ev || ev.kind !== 'event') return null;
+    var ch = ev.choices[ci];
+    if (!ch || !choiceEnabled(st, ev, ci)) return null;
+    var outcome = { evId: ev.id, evTitle: ev.title, evDate: ev.date, text:'', deltas:{}, hist: !!ch.hist, bankrupt:false, checkInfo:null };
+    var fx = (typeof ch.fx === 'function') ? ch.fx(st) : (ch.fx || {});
+    st._warAmp = !!(st.flags.swamped && (ev.id === 'E21' || ev.id === 'E22' || ev.id === 'E23' || ev.id === 'E23S' || ev.id === 'E24' || ev.id === 'E25' || ev.id === 'E25S'));
+    if (st.stats.yh >= 2 && (ev.ch === 4 || ev.ch === 5) && fx && fx.aq > 0){
+      var fxL = {}; for (var lk in fx) fxL[lk] = fx[lk];
+      fxL.aq += 2; if (fxL.mx < 0) fxL.mx -= 2;
+      fx = fxL;
+    }
+    var fxAltHit = null;
+    if (ch.fxAlt){
+      var preV = st.stats[ch.fxAlt.stat];
+      var hit = (ch.fxAlt.below !== undefined) ? (preV < ch.fxAlt.below) : (ch.fxAlt.aboveEq !== undefined && preV >= ch.fxAlt.aboveEq);
+      if (hit){ fxAltHit = ch.fxAlt; var fxC = {}; for (var fk in fx) fxC[fk] = fx[fk]; for (var ak in ch.fxAlt.fx) fxC[ak] = (fxC[ak] || 0) + ch.fxAlt.fx[ak]; fx = fxC; }
+    }
+    outcome.deltas = applyFx(st, fx, outcome);
+    if (ch.setFlags) for (var i=0;i<ch.setFlags.length;i++) st.flags[ch.setFlags[i]] = true;
+    if (ch.countFlag) st.flags[ch.countFlag] = (st.flags[ch.countFlag] || 0) + 1;
+    if (ch.countFlag === 'recall' || ch.recallHit){
+      if (ch.recallHit) st.flags.recall = (st.flags.recall || 0) + 1;
+      st.flags.resistance = (st.flags.resistance || 0) + 1;
+    }
+    if (ch.confront) st.flags.confronted = true;
+    if (ch.recruit) st.flags.recruitPts = (st.flags.recruitPts || 0) + ch.recruit;
+    outcome.text = (typeof ch.result === 'function') ? ch.result(st) : (ch.result || '');
+    if (fxAltHit && fxAltHit.resultSuffix) outcome.text += fxAltHit.resultSuffix;
+    if (ch.special) special(st, ev, ch, outcome);
+    dissolutionCheck(st, ev, outcome);
+    /* 强制召回 · 集体反抗：被硬拉回来的人，会先掀桌子 */
+    if (!st.ending && (st.flags.resistance || 0) >= 2){
+      if (!st.flags.pushbackFired){
+        st.flags.pushbackFired = true;
+        mergeDeltas(outcome.deltas, applyFx(st, { mx:-12, qb:-10, rh:-10 }, outcome));
+        outcome.text += '\n\n只是这一次，被召回的人没有回到岗位上。他们联名在公告区贴出一封长信：我们离开的时候，你们留的是灯；我们回来的时候，迎接我们的却是绳子。长信贴出的当晚，三个部门的人集体请辞——集体反抗，开始了。民心 -12，前辈满意度 -10，融合度 -10。';
+        if ((st.flags.resistance || 0) >= 3 || dissolutionCollapsed(st)){
+          st.ending = 'jieti'; st.finished = true;
+          outcome.text += DISSOLVE_TEXT.RECALL;
+        }
+      } else if ((st.flags.resistance || 0) >= 3){
+        st.ending = 'jieti'; st.finished = true;
+        outcome.text += DISSOLVE_TEXT.RECALL;
+      }
+    }
+    /* E27 玉米残部钩子 */
+    if (ev.id === 'E27' && st.flags.cornRemnant && !st.flags.cornRemnantFired){
+      st.flags.cornRemnantFired = true;
+      mergeDeltas(outcome.deltas, applyFx(st, { aq:-5 }, outcome));
+      outcome.text += '\n\n只是巡访途中传来消息：流放在边疆的玉米旧部又闹了一场，边防连夜处置。安全 -5。当年的从轻发落，账还没有算完。';
+    }
+    st.history.push({ ev: ev.id, ch: ev.chapter || ev.ch, label: ch.label, hist: !!ch.hist, histLabel: histLabelOf(ev) });
+    if (st.stats.mx <= 0 && !st.ending){ st.ending = 'wangguo'; st.finished = true; }
+    st.idx++;
+    st.enteredFor = -1;
+    if (!st.ending && !nodeAt(st)){ st.finished = true; st.ending = computeEndingId(st); }
+    if (st.ending) st.finished = true;
+    st._warAmp = false;
+    return outcome;
+  }
+
+  /* ================= 结局 ================= */
+  function scoreOf(st){
+    var s = st.stats;
+    var avg4 = (s.mx + s.gk + s.aq + s.wj) / 4;
+    var balance = 100 - Math.abs(s.qb - s.rh);
+    return clamp(avg4 * 0.65 + balance * 0.2 + s.gz * 0.15);
+  }
+
+  function computeEndingId(st){
+    var s = st.stats, f = st.flags;
+    if (s.qb <= 20) return 'gujia';
+    if (s.qb >= 80 && s.rh <= 30) return 'jinian';
+    if (s.gz <= 20) return 'shenpan';
+    if (s.aq >= 85 && s.mx <= 40) return 'tiemu';
+    if (s.gk >= 85 && s.mx <= 40) return 'kongcheng';
+    if (s.wj <= 35) return 'gudao';
+    if (s.qb >= 40 && s.rh >= 60 && s.gz >= 55 && (f.recall || 0) < 2) return 'baisha';
+    if (f.exileReturn || f.capitalDissolved) return 'jiehou';
+    if (s.wj >= 90 && s.aq >= 75) return 'baquan';
+    if (s.wj >= 80) return 'nanshizi';
+    if (f.lampEarly && f.lampLate && (f.recall || 0) === 0) return 'changming';
+    if (s.mx >= 40 && s.mx <= 70 && s.gk >= 40 && s.gk <= 70 && s.aq >= 40 && s.aq <= 70 && s.wj >= 40 && s.wj <= 70 && s.qb >= 45 && s.rh >= 45) return 'zhongdao';
+    return 'tongguan';
+  }
+
+  var ENDINGS = {
+    wangguo: { title:'真亡国', sub:'星空合众国 · 终', desc:'星空合众国没有熬过 2024 年的春天。它死于自己人的手里——不是输给任何外敌，是输给了无法调和的彼此。很多年后，人们还会提起这个从聊天群里长出来的国家，提起它有过的法律、舰队、大学和明信片。提起它最后的日子时，声音总会低下去。历史没有如果。但你刚刚走完的这一局，就是它所有可能的「如果」里，最痛的一种。' },
+    zhenya:  { title:'镇压之夜', sub:'雪仙流亡变体', desc:'镇压成功了。车长的联邦从此秩序井然，议会里再也没有人闲聊——也没有人说话了。你在海外的流亡岁月里，偶尔会收到本土寄来的明信片，什么都没写，只有一张高川市的夜景。你知道那是什么意思：还有人记得，还有人在等。这个结局不是终点，只是这个国家最长的那个夜晚。而你，要负责在夜里把灯留着。' },
+    liuwang: { title:'流亡政府', sub:'归途未竟', desc:'你没有回去。流亡政府在海外的办公室换了三次地址，公告发了一年又一年。有人说星空合众国已经亡了，有人说它只是睡着了。你守着名册和印章，像守着一封没有地址的信——你知道的，这个国家最擅长的事情，就是在所有人都以为它结束的时候，悄悄地回来。这一次，只是轮到你来等它了。' },
+    gujia:   { title:'孤家寡人', sub:'赢了所有战争的人', desc:'你通关了。你赢了每一次冲突、每一场战争、每一个对手。新移民的国家干净、平等、高效——只是前辈满意度跌到了谷底：那些陪你打下江山的人，一个都不在了。庆功宴的那晚，你端着酒杯站在窗前，忽然想起南十字星的废墟上，一群人围着篝火分一块压缩饼干的夜晚。这个国家什么都有了。只是再也没有人，能陪你讲当年的故事。' },
+    baisha:  { title:'白沙草屿', sub:'和解之约 · 最高评价', desc:'你没有让任何一方彻底认输，也没有让任何一方彻底消失。战争结束后，前辈与新移民在白沙草屿坐下来——不是一方原谅另一方，而是互相承认：这个国家，是你们一起建的；那些仗，也是一起打错的。你们约定，不再伤害任何人。菲尔南德与你并肩站在纪念墙前，他说：「我们总算把话说完了。」都守住了信仰的残影——这是星空合众国能抵达的、最好的结局。' },
+    nanshizi:{ title:'南十字星再临', sub:'星海无垠', desc:'联邦的外交版图抵达了前所未有的广度：一百多个微国家的联盟、跨洲的峰会、写进各国公告栏的名字。人们开始说，南十字星的时代以另一种方式回来了——不是靠合并与吞并，是靠一个所有人都愿意坐下来的桌子。你站在星图前，忽然明白：这个国家最强的武器，从来不是军队，是朋友。' },
+    jieti:   { title:'群体解体', sub:'没有葬礼的告别', desc:'没有爆炸，没有陷落，没有最后通牒。就是有一天，群公告停更了，值班表空了，最后一条消息停在某个普通的深夜——「明天见」，然后再也没有明天。人们散回各自的生活：考试、工作、城市、家庭。没有人背叛谁——离开从来不是叛变，只是日子推着人往前走。很多年后，有人在别的群里提起星空合众国，老人们会发一个表情，然后说：那时候真好。这个国家最后留下的，是一盏没人认领的灯，和一句话：离开过也没关系，星星会等你。' },
+    tongguan:{ title:'', sub:'新纪元', desc:'2024 年 6 月，星空合众国历经七年风雨，迈入了崭新的纪元。它不完美——有伤口，有遗憾，有没能说完的话。但它活下来了，而且活得有法度、有朋友、有自己的明信片和大学。这一局里你的每一步选择，都真实地改变了它的样子。历史只有一条路，而你刚刚证明：另一条路，也走得通。' },
+    jinian:  { title:'南十字星纪念馆', sub:'温暖的空国', desc:'这个国家最后变成了一座纪念馆。前辈们被照顾得无微不至：纪念墙、功勋册、逢年过节从不缺席的问候，一样都不少。只是新移民来了又走，没有人真正留下来——他们说，这里很好，就是太像一场展览了。守夜人的名单越来越长，年纪也越来越大。灯一直亮着，展厅一直干净，只是脚步声，一年比一年少。' },
+    shenpan: { title:'审判庭的长夜', sub:'法律与恐惧', desc:'后来，这个国家只剩下一种语言：判决。驱逐令、流放令、处罚公告，一份接一份，措辞越来越熟练。起初你的手还会抖——签下第一份驱逐令的那个夜里，你在办公室坐到天亮。后来的手不抖了。这才是最可怕的地方：法律没有变质，它只是慢慢变成了恐惧本身，而你，是那个让它变成这样的人。' },
+    tiemu:   { title:'铁幕之都', sub:'秩序的极致', desc:'铁幕落下之后，联邦的边境再也没有出过事。巡逻准时，防线如铁，警报一次都没有响过。代价写在另一本账上：频道里越来越安静，年轻人一个个以「忙」为由淡出，前辈们学会了在开口之前先看一眼四周。这个国家安全到了极致——它保护的那个国家，却在一点一点变空。' },
+    kongcheng:{ title:'富饶的空城', sub:'金币与空城', desc:'国库的数字最后涨到没有人再去数。项目批得飞快，工程一座比一座漂亮，纪念品卖到了全世界。只是庆功宴的桌子越摆越大，来吃饭的人越来越少。钱解决了一切它能解决的问题：楼、船、纪念碑——唯独没能解决一个最简单的问题：人为什么要留下来。这个国家什么都有，就是没有人了。' },
+    gudao:   { title:'孤岛之国', sub:'闭关之国', desc:'联邦的国门是一点一点关上的。先是婉拒，后是沉默，最后连婉拒都省了——星图上那些曾经闪烁的名字，一个一个暗了下去。这不是亡国，更像一种自己选的孤独：没有人打进来，你们只是决定不再出去。很多年后，孩子们指着墙上那面旧联盟的旗帜问：那是什么？没有人答得上来。' },
+    jiehou:  { title:'劫后重生', sub:'死过一次的国家', desc:'这个国家死过一次。它在海外的流亡办公室里死过，在亲手解散的首都频道里死过——然后，它又活了过来。联邦人后来把亡国危机编上号，第十三次、第十四次，语气像在数自家孩子的生日。疤痕没有被藏起来，反而被写进了国歌的注脚：我们不是不会死，我们是死过，还回来过。' },
+    baquan:  { title:'星海霸权', sub:'敬畏而非朋友', desc:'南十字星确实回来了——以另一种方式。联盟的舰队巡弋在每一个大洲，联邦的旗帜插在每一个港口，只是这一次，各国代表起立迎接时，眼神里是敬畏，不是亲近。你站在星图前，忽然想起很多年前，你们举起旗帜时说过的话：我们反的，就是这个。胜利的味道，原来和当年最讨厌的东西，一模一样。' },
+    changming:{ title:'长明灯', sub:'星星会等你', desc:'你没有什么惊天动地的胜利。你只是从头到尾做对了一件小事：每一次有人要走，你都不拦，只把门口的灯留着。于是散掉的人，在外面累了、倦了、忙完了，抬头看见那盏灯还亮着，就一个一个地回来了。这个国家最后的样子，不像一场凯旋，像一盏长明灯——和那句所有人都记得的话：离开过也没关系，星星会等你。' },
+    zhongdao:{ title:'中道', sub:'如履薄冰 · 大成', desc:'这一局里，什么极端都没有发生。没有奇迹般的和解，没有戏剧性的陷落，每一条线都只是堪堪守住——民心、国库、安全、外交，前辈与新移民，全都停在不坏也不好的地方。你累得像守了七年夜的人。但这个国家就这样活下来了：平平无奇，伤痕累累，真实得像一个被屏住的呼吸，终于缓缓吐了出来。' }
+  };
+
+  var GENERAL_TITLES = [
+    { key:'wj', title:'星海纵横者' },
+    { key:'gk', title:'缔造者' },
+    { key:'mx', title:'人民的雪仙' },
+    { key:'aq', title:'铁腕守成' }
+  ];
+
+  var CH_REP = { 1:'E03', 2:'E04', 3:'E08', 4:'E14', 5:'E25', 6:'E29' };
+  var CH_NAMES = { 1:'第一章 · 建制', 2:'第二章 · 联盟', 3:'第三章 · 政变', 4:'第四章 · 建设', 5:'第五章 · 五次前新战争', 6:'第六章 · 新纪元' };
+
+  function characterFates(st, endingId){
+    var s = st.stats, f = st.flags, out = [];
+    /* 车长 */
+    if (endingId === 'zhenya') out.push({ name:'车长', text:'坐稳了总统的位置。他的联邦秩序井然，只是再也没有人敢在议会里笑出声。偶尔深夜，他会独自去光之森林站一会儿——没有人知道他在想什么。' });
+    else if (endingId === 'jieti') out.push({ name:'车长', text:'回到了自己的生活里。后来有人在别的群里见过他的头像，灰着，很久没有再亮起来。' });
+    else if (endingId === 'liuwang' || endingId === 'wangguo') out.push({ name:'车长', text:'留在了那片他拼命想守住的土地上。胜负之外，他与雪仙之间那句「别让国家死在自己人手里」，成了再也没有机会兑现的话。' });
+    else if (f.remnant) out.push({ name:'车长', text:'谈判下台后带着旧部转入暗处，时有风波。晚年他在边疆开了一间小小的修理铺，有人问起七月，他只说：「那时候，我们都以为自己在救国。」' });
+    else if (s.qb >= 40) out.push({ name:'车长', text:'被推翻后没有被清算。看在菲尔南德的面上，也看在他当年的功劳上，他回到了光之森林守林——那是菲尔南德旧部们最后的归宿。逢年过节，总统府会收到一筐林子里的菌子，没有署名。' });
+    else if (endingId === 'jinian') out.push({ name:'车长', text:'纪念馆的每一间展厅，他都亲自布置。有人问他这个国家还缺什么，他想了很久，说：缺年轻人来看。' });
+    else if (endingId === 'shenpan') out.push({ name:'车长', text:'他是被判决送走的那批人里最安静的一个。临行前他把军帽留在桌上，说：这个国家现在只剩下一种声音了——宣判的声音。' });
+    else if (endingId === 'tiemu') out.push({ name:'车长', text:'铁幕之内，他成了最受尊敬也最沉默的将军。阅兵式上队列如刀切，他站在高台上，忽然想起议会里曾经吵成菜市场的那些年。' });
+    else if (endingId === 'kongcheng') out.push({ name:'车长', text:'国库最满的那一年，他请辞回了光之森林。理由写得很短：这里什么都有，就是没有仗要打，也没有人要守了。' });
+    else if (endingId === 'gudao') out.push({ name:'车长', text:'孤岛的海防图是他一笔一笔重画的。没有盟友，没有访客，他守着一圈越收越紧的边境线，像守着一个不再长大的梦。' });
+    else if (endingId === 'jiehou') out.push({ name:'车长', text:'死过一次的国家里，他是少数几个两边都待过的人。有人问他恨不恨，他说：恨过。后来发现，恨也是一种还在乎。' });
+    else if (endingId === 'baquan') out.push({ name:'车长', text:'霸权的舰队有他一半的功劳。庆功宴上他举杯向星图，说的话却很轻：我们当年反的，好像就是这个。' });
+    else if (endingId === 'changming') out.push({ name:'车长', text:'他是被门口那盏灯照回来的人之一。回来那天他什么都没解释，只把光之森林的菌子又寄了一筐到总统府。这一次，有署名。' });
+    else if (endingId === 'zhongdao') out.push({ name:'车长', text:'他没有成为传奇，也没有成为罪人。他在这个国家里慢慢变老，偶尔跟年轻人讲当年——讲到一半，总会补一句：其实也没那么了不起。' });
+    else out.push({ name:'车长', text:'被推翻后遭驱逐，从此再没有回来。他的名字留在史书里，功过各半：南十字星的功臣，七月的镇压者。同一个人。' });
+    /* 玉米 */
+    if (endingId === 'jieti') out.push({ name:'玉米', text:'群散之后，他在一个只剩十几个老人的小群里继续当他的前辈。每天清晨，他准时发一张玉米地的照片，配文只有两个字：早安。' });
+    else if (endingId === 'wangguo') out.push({ name:'玉米', text:'在国家的废墟上，他什么都没有赢到。后来有人在边疆见过他，守着一片玉米地，谁问起联邦，他都摇头。' });
+    else if (f.cornExiled && endingId === 'baisha') out.push({ name:'玉米', text:'驱逐令没有撤销，但和解那年，纪念碑奠基的邀请送到了边疆。他的回信只有一行：「地种完了，就回去看看。」落款是他南十字星时代的旧编号。' });
+    else if (f.cornExiled) out.push({ name:'玉米', text:'在边疆终老。西南离岛的人后来陆续回来了一些，只有他没有——不是不能，是不肯。他至死都说：我没有错，我只是老了，跟不上了。这个国家欠他的功劳，和他欠这个国家的道歉，一起埋进了边疆的土里。' });
+    else if (f.cornAmnesty) out.push({ name:'玉米', text:'特赦之后收敛了许多，安心做他的前辈。逢年过节还会给总统府寄土产，只是再也不碰政治了。' });
+    else if (f.cornRemnant) out.push({ name:'玉米', text:'流放边疆，势力犹在。逢年过节，边疆的动静总要让安全部门多值两班——这笔账，这个国家要慢慢还。' });
+    else if (endingId === 'jinian') out.push({ name:'玉米', text:'纪念馆里有一整面墙是他的战功。他每天来擦一遍铭牌，擦完坐在台阶上，看门口有没有新面孔——大多数日子，没有。' });
+    else if (endingId === 'shenpan') out.push({ name:'玉米', text:'判决书送到边疆时，他只问了一句：这次，又是谁签的字？没有人回答他。他把玉米地又往外扩了一亩，像在跟谁赌气。' });
+    else if (endingId === 'tiemu') out.push({ name:'玉米', text:'铁幕之都的边疆安静得反常。他守着的那片玉米地年年丰收，只是收下来的粮食，越来越不知道要送给谁吃。' });
+    else if (endingId === 'kongcheng') out.push({ name:'玉米', text:'国家有钱之后，给他寄过一笔丰厚的安置金。他原样退回，附了一行字：我守的不是钱能买的东西。' });
+    else if (endingId === 'gudao') out.push({ name:'玉米', text:'闭关的国家里，他成了最坚定的守门人。每一个想出去看看的年轻人，都要先过他这一关——他年轻时想守的东西，老了变成了想拦的东西。' });
+    else if (endingId === 'jiehou') out.push({ name:'玉米', text:'国家重生那年，纪念碑的奠基名单里有他的名字。他没有来，但托人带了一句话：地种完了，就回去看看。这次，是真的。' });
+    else if (endingId === 'baquan') out.push({ name:'玉米', text:'霸权的版图里，边疆成了最前线。他在那里又守了很多年，只是这一次，旗帜飘向的方向，是朝着别人家的门口。' });
+    else if (endingId === 'changming') out.push({ name:'玉米', text:'他是自己走回来的。没有人去拉他，是他路过高川时看见门口的灯还亮着，站了很久，然后推门进去了。管理员给他留的座位，一直都在。' });
+    else if (endingId === 'zhongdao') out.push({ name:'玉米', text:'他没有被驱逐，也没有被特赦，就在这个国家里平平常常地老了。逢年过节寄来的土产，成了总统府厨房最稳定的供应。' });
+    else out.push({ name:'玉米', text:'战争的硝烟散去后，他渐渐淡出了政坛。人们再提起他时，先想起的慢慢又变回南十字星时代的那个玉米——打过最硬的仗的人。' });
+    /* 咖喱 */
+    if (endingId === 'jieti') out.push({ name:'咖喱', text:'回到了学业和工作里。偶尔翻到北海岸的旧截图，她会笑一下，然后把手机扣下——那段日子，她没有跟任何人提起过。' });
+    else if (f.curryGovernor) out.push({ name:'咖喱', text:'北海岸总督，后来成为新移民一代的领袖人物。她常说自己在这个国家被误会过、也被公正对待过——「所以我信它」。' });
+    else if (endingId === 'jinian') out.push({ name:'咖喱', text:'她是少数留到最后的年轻人。纪念馆的讲解词是她写的，写到最后一段时她停了很久：这里曾经有过很多像我一样的人。' });
+    else if (endingId === 'shenpan') out.push({ name:'咖喱', text:'她的名字出现在某一份判决的附件里，只有一行，小得像个注脚。她没有申辩——在这个国家，申辩的通道是她亲手帮忙修的，如今堵上了。' });
+    else if (endingId === 'jiehou') out.push({ name:'咖喱', text:'重生的国家里，她继续做北海岸的总督。她说：死过一次的地方，人说话都会轻一点。这很好。' });
+    else if (endingId === 'changming') out.push({ name:'咖喱', text:'她是被灯照回来的年轻人之一。回来后她把北海岸的公告栏重新刷了一遍，在最上面写：欢迎回家——这句是说给所有人的。' });
+    else out.push({ name:'咖喱', text:'在北海岸默默做着实事。第一次战争的误会终究没有完全说清，但她没有走——「走了，就真输了。」' });
+    /* 戈梦 */
+    if (endingId === 'jieti') out.push({ name:'戈梦', text:'行政院长，联邦的中轴。群散之前，最后一版值班表也是他排的——排到了一个再也没有人接班的日期。' });
+    else if (endingId === 'jinian') out.push({ name:'戈梦', text:'纪念馆的值班表还是他排的，排到很远很远的将来。有人问排给谁看，他说：排给这个国家看。它习惯了有人守着。' });
+    else if (endingId === 'shenpan') out.push({ name:'戈梦', text:'判决的年代里，他的方案越来越薄——不是没了主意，是每一份方案递上去，活下来的只有处罚那几页。最后他只在页眉写日期。' });
+    else if (endingId === 'jiehou') out.push({ name:'戈梦', text:'国家重建的方案，一大半还是出自他手。他在扉页上写了一行小字：第二次了。这一次，慢一点。' });
+    else if (endingId === 'changming') out.push({ name:'戈梦', text:'值班表上开始重新出现离开者的名字时，他什么都没说，只是把表格的列数加宽了两列。他早就留好了位置。' });
+    else out.push({ name:'戈梦', text:'行政院长，联邦的中轴。无论政局如何翻覆，戈梦的方案总会准时出现在总统桌上。新纪元的体制改革，一大半出自他的手笔。' });
+    /* 猫猫 */
+    if (endingId === 'jieti') out.push({ name:'猫猫', text:'猫滨城还漂在东海岸的设定图里。群散之后，猫猫把最后一版城市地图寄给了总统府，没有附言。' });
+    else if (endingId === 'jinian') out.push({ name:'猫猫', text:'猫滨城成了纪念馆的一部分，浮在东海岸，一年四季亮着灯。猫猫说：城可以空着，灯不能灭——万一有人回来找路呢。' });
+    else if (endingId === 'shenpan') out.push({ name:'猫猫', text:'他很早就不再说话了。猫滨城的灯还亮着，只是城里的公告栏上，最后一条消息停在了很多年以前。' });
+    else if (endingId === 'jiehou') out.push({ name:'猫猫', text:'猫滨城在国家重生那年重新通航。他寄来的第一批海产里夹着一张纸条：城一直在，就是等你们回来。' });
+    else if (endingId === 'changming') out.push({ name:'猫猫', text:'他的猫滨城是回来的人最先看见的灯塔。每一个归途上的人，都先在他的城里歇一晚，再继续往家走。' });
+    else out.push({ name:'猫猫', text:'前总理，退居二线后在东海岸建起了漂浮的猫滨城。逢年过节，城里会给总统府寄来一筐海产——这个国家最长情的守望，往往不在台前。' });
+    /* 菲尔南德 */
+    if (endingId === 'baisha') out.push({ name:'菲尔南德', text:'与雪仙在白沙草屿把话说完了。共同缔造者，时隔多年，重新并肩。他回高川继续做事，门口那盏灯，他说他来守。' });
+    else if (endingId === 'gujia') out.push({ name:'菲尔南德', text:'在光之森林住下了，守着功臣们的纪念树。临行前他给总统府留了一盏灯和一句话：「人散了，灯别灭。」' });
+    else if (endingId === 'jieti') out.push({ name:'菲尔南德', text:'解散那天，他在群里留了最后一句：「灯我带走了。谁想回来，先来找我。」然后退出了群聊。共同缔造者的灯，据说至今还亮着。' });
+    else if (endingId === 'wangguo' || endingId === 'zhenya' || endingId === 'liuwang') out.push({ name:'菲尔南德', text:'那句「我们总要谈一谈」，终究没能说出口。共同缔造者之间的那场谈话，成了这个国家最大的未竟之事。' });
+    else if (endingId === 'jinian') out.push({ name:'菲尔南德', text:'纪念馆的守夜人名单上，他排第一个。他说他守的不是展品，是门口——万一哪天，有年轻人推门进来呢。' });
+    else if (endingId === 'shenpan') out.push({ name:'菲尔南德', text:'审判庭的长夜里，他是最后一个还敢替被告说话的人。声音越来越小，但没有停。他说：规则是我们一起定的，不能让规则先死在判决里。' });
+    else if (endingId === 'tiemu') out.push({ name:'菲尔南德', text:'铁幕落下那年，他把高川的市政厅改成了档案馆。他说：一个只剩下秩序的国家，至少要把自己为什么变成这样，记下来。' });
+    else if (endingId === 'kongcheng') out.push({ name:'菲尔南德', text:'富饶的空城里，他主持修了全国最豪华的纪念堂。落成那天他站在空荡荡的大厅里说：我们什么都买得起，就是买不回人了。' });
+    else if (endingId === 'gudao') out.push({ name:'菲尔南德', text:'孤岛的晚年，他把当年的接纳法案裱起来挂在墙上。法案上写着「欢迎每一个漂流者」——窗外，是他亲手关上的国门。' });
+    else if (endingId === 'jiehou') out.push({ name:'菲尔南德', text:'国家重生之后，他与你一起把纪念墙又修了一遍。他说：死过一次的东西，才知道活着要轻拿轻放。这一次，那场「总要谈一谈」，谈完了。' });
+    else if (endingId === 'baquan') out.push({ name:'菲尔南德', text:'霸权的星图铺满整面墙时，他一个人站在光之森林里。他带出来的人坐上了高位，他却越来越少说话——有些胜利，他认不出。' });
+    else if (endingId === 'changming') out.push({ name:'菲尔南德', text:'门口那盏灯，最后是他接过去守的。他说：我带出来的人，我弄丢过；这盏灯，不能再丢了。据说那盏灯，后来一直亮着。' });
+    else if (endingId === 'zhongdao') out.push({ name:'菲尔南德', text:'他与你在这个国家里一起慢慢变老。那场「总要谈一谈」的谈话一直没有正式开始，但你们并肩走过的路，已经把大半的话说完了。' });
+    else out.push({ name:'菲尔南德', text:'仍在高川。他与雪仙之间那场「总要谈一谈」的谈话还没有发生，但改国号那天并肩走的那段路，说明有些话已经在路上了。' });
+    return out;
+  }
+
+  function buildEnding(st){
+    var id = st.ending || computeEndingId(st);
+    var base = ENDINGS[id];
+    var title = base.title;
+    var desc = base.desc;
+    if (id === 'jieti' && st._dissolveText) desc = String(st._dissolveText).replace(/^\n+/, '') + '\n\n' + desc;
+    var MAXNOTES = { mx:'民心抵达了顶点——这一局里，没有一个人是被落下的。', gk:'国库抵达了顶点——这个国家第一次，不用为明天借钱。', aq:'安全抵达了顶点——边境的灯塔整夜亮着，没有响起一条警报。', wj:'外交抵达了顶点——星图上每一个名字，都愿意接这个国家的电话。', qb:'前辈满意度抵达了顶点——老人们说，这辈子，值了。', rh:'新移民融合度抵达了顶点——新来的人说：这里就是家了。' };
+    ['mx','gk','aq','wj','qb','rh'].forEach(function(k){ if (st.stats[k] === 100) desc += '\n\n' + MAXNOTES[k]; });
+    var EPILOGUE_GOOD = { baisha:1, changming:1, zhongdao:1, jiehou:1, nanshizi:1, tongguan:1 };
+    if (EPILOGUE_GOOD[id] && st.stats.qb >= 30){
+      desc += '\n\n—— 后记 · 真实世界的后来 ——\n这局编年史到 2024 年 6 月就结束了，但故事没有。后来的几年里，新建设一座座立起来，只是有些东西，始终没有人能再建出来。首都最终从高川迁到了云屏——雪仙的家乡。\n2025 年的春天，雪仙亲自去了一趟白沙，把退隐在光之森林里的菲尔南德请了回来。没有小说里那样盛大的和解，老人只答应了两件事：不乱说话，不追究原来的事。\n后来的事实证明，这是最正确的一个决定。大家渐渐忙于生活，坚守岗位的只剩下菲尔南德、卡特尔、雪仙和几个人，新移民和老人时不时回来看看。请回来的人，最后撑起了这个国家。';
+    }
+    if (id === 'tongguan'){
+      var best = GENERAL_TITLES[0], bv = -1;
+      for (var i=0;i<GENERAL_TITLES.length;i++){
+        var v = st.stats[GENERAL_TITLES[i].key];
+        if (v > bv){ bv = v; best = GENERAL_TITLES[i]; }
+      }
+      title = best.title;
+    }
+    var lvl = recruitLevel(st);
+    var repMap = { 1:'E03', 2:'E04', 3:'E08', 4:'E14', 5:(st.flags.noWar ? 'E44' : (lvl === 'some' ? 'E25S' : 'E25')), 6:'E29' };
+    var nameMap = { 1:'第一章 · 建制', 2:'第二章 · 联盟', 3:'第三章 · 政变', 4:'第四章 · 建设', 5:(st.flags.noWar ? '第五章 · 寂静的冬天' : '第五章 · 五次前新战争'), 6:'第六章 · 新纪元' };
+    var comparison = [];
+    for (var c=1;c<=6;c++){
+      var repId = repMap[c], rec = null;
+      for (var j=0;j<st.history.length;j++) if (st.history[j].ev === repId) rec = st.history[j];
+      if (rec) comparison.push({ ch: nameMap[c], evTitle: EVENTS[repId].title, you: rec.label, hist: rec.histLabel || EVENTS[repId].histNote || null, isHist: rec.hist });
+    }
+    return { id:id, title:title, sub:base.sub, desc:desc, score: scoreOf(st),
+             fates: characterFates(st, id), comparison: comparison, stats: st.stats };
+  }
+
+  return {
+    STYLES: STYLES, STATLAB: STATLAB, EVENTS: EVENTS, FLOW: FLOW,
+    newState: newState, nodeAt: nodeAt, enterNode: enterNode, leaveNode: leaveNode,
+    choose: choose, choiceEnabled: choiceEnabled, enabledChoices: enabledChoices,
+    computeEndingId: computeEndingId, buildEnding: buildEnding, scoreOf: scoreOf,
+    applyFx: applyFx, clamp: clamp
+  };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = SSF;
+</script>
+
+<script>
+/* ================= UI 层 ================= */
+(function(){
+  if (typeof document === 'undefined') return;
+  var SAVE_KEY = 'ssfChronicleSaveV2';
+  var screen = document.getElementById('screen');
+  var hud = document.getElementById('hud');
+  var state = null, phase = 'title', lastOutcome = null, pendingStyle = null;
+
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function paras(arr){ return (arr || []).map(function(p){ return '<p>' + esc(p) + '</p>'; }).join(''); }
+  function save(){
+    try {
+      if (!state){ localStorage.removeItem(SAVE_KEY); return; }
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ state: state, phase: phase, lastOutcome: lastOutcome }));
+    } catch(e){}
+  }
+  function load(){
+    try { var raw = localStorage.getItem(SAVE_KEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; }
+  }
+  function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
+
+  /* ---------- 图片资源（全部相对路径，缺失时优雅隐藏） ---------- */
+  var PNAMES = { xuexian:'雪仙', feiernande:'菲尔南德', chezhang:'车长', yumi:'玉米', gali:'咖喱', gemeng:'戈梦',
+                 maomao:'猫猫', xiaonuo:'小诺', liyan:'立言', katherina:'凯瑟琳奈', teluoyi:'特洛伊', malachite:'Malachite' };
+  var PORTRAITS = {
+    E06:['feiernande','chezhang'], E07:['chezhang'], E08:['feiernande','chezhang'], E09:['xuexian','chezhang'],
+    E14:['yumi'], E18:['yumi'], E21:['yumi','gali'], E22:['yumi'], E23:['xuexian','yumi'], E25:['xuexian'], E23S:['yumi','gali'], E25S:['xuexian'], E44:['xuexian'],
+    E26:['feiernande','gali'], E28:['katherina'], E30:['yumi'], E31:['xiaonuo','liyan'],
+    I03:['gemeng'], I06:['malachite'], I10:['teluoyi'], I12:['xiaonuo'], I14:['maomao']
+  };
+  var BIOS = [
+    { id:'xuexian', role:'联邦总统 · 本作主角（你）', tag:'九年里，她签过最难的那些字，也为其中一些后悔至今。',
+      works:'建国一代的核心，联邦九年的领袖。',
+      key:'政变中退位又复起；前新战争里，她要在保住前辈与接住新人之间逐次落子——包括签下驱逐玉米的那份判决。' },
+    { id:'feiernande', role:'建国元老 · 高川市长', tag:'他这一生只做一件事：把人护在身后——不管那个人站在哪一边。',
+      works:'建国元老，地位与雪仙等同；与玉米一起打下全国的交通底子（铁路、公路）；年轻时是开放派，接纳法案上有他的签名。而这个国家每一座城市的街道、线路与站名，出自他的图纸——首都高川的全图是他的代表作：清江穿城、环线层叠，几百个站名各有出处，是十年一层层积出来的城市；高川的卫星城全图，也出自他手。战后新移民拆了旧建设、另建新城，却始终复制不出他的城市：线条临摹得出来，每一个转弯背后的理由，临摹不出来。',
+      key:'车长叛乱时，他带着私人卫队保卫雪仙——民心够，他才肯出手；玉米事发后，他试图把玉米藏起来，海啸冲过西南与白沙，他最后退到白沙的光之森林。他逮捕过图谋行刺的自己人，也藏过全民声讨的罪人——他护的从来不是立场，是人。首都几经迁徙，最后还是回了高川——这个国家的记忆，长在他画的街道里，搬不走。' },
+    { id:'chezhang', role:'南十字星功臣 · 曾任总统', tag:'军中威望最高的人，被时代推上了他不擅长的位置。',
+      works:'南十字星时期的功勋人物，菲尔南德的旧部，联邦军队威望的象征。',
+      key:'2023 年 7 月继任总统，提出禁聊提案，数日后被武装民众推翻；而政变之夜带兵保卫雪仙的，正是他的老长官菲尔南德。' },
+    { id:'yumi', role:'建国功臣 · 镇守西南', tag:'这个国家的路，是他修的；这个国家的门，也是他亲手关上了一半。',
+      works:'整个星空合众国的交通底子——铁路、公路——全是玉米和菲尔南德建设的。镇守西南离岛城市群，附属国白给蓝也在他的影响之下。',
+      key:'2023 年政变之夜，他是站在雪仙一边打仗的人。真实历史里，新移民表现不佳，他冷嘲热讽，引发全民激烈抗议；他退守西南，又说出了那句再也收不回的话，由此引发「海啸」。菲尔南德试图把他藏起来，没藏住。海啸过后，记载里他被处决了——但那只是记载。废掉一个建设了整个国家的人，从来不是一句判决那么轻。' },
+    { id:'gali', role:'新移民代表 · 北海岸总督', tag:'被误驱逐过的人，后来成了新移民一代的旗。',
+      works:'新移民一代的领袖人物，冲突最烈时站在第一线。',
+      key:'第一次前新战争中被误驱逐三日，回归后升任北海岸总督；她的去留，是这个国家公正度的试金石。' },
+    { id:'gemeng', role:'行政院长', tag:'联邦的中轴：所有方案、值班表和烂摊子，最后都过他的手。',
+      works:'行政体系的搭建者与维持者。',
+      key:'建设年代的日常运转由他撑着；战争年代，他是少数两边都还愿意与之说话的人。' },
+    { id:'maomao', role:'猫滨城城主', tag:'东海岸的灯塔看守人——话不多，城不丢。',
+      works:'猫滨城的建设者与城主。',
+      key:'出现在新纪元的章节里；不管外面打成什么样，猫滨城的灯一直亮着。' },
+    { id:'liyan', role:'建设家', tag:'离开却永不被忘记的——建设家。',
+      works:'联邦的建设人才，战争期间一度站在另一边。',
+      key:'战后他回来了。2024 年 6 月，他与雪仙一起做出联邦第一版明信片。' },
+    { id:'xiaonuo', role:'新生代成员', tag:'在旧故事里长大的新一代，她的问题比答案多。',
+      works:'联邦新生代成员。',
+      key:'出现在新纪元的日常与巡访章节中。' },
+    { id:'katherina', role:'外部顾问', tag:'外来的方法论，让联邦的商务部门耳目一新。',
+      works:'受邀而来的顾问，带来成套的商务与运营方法。',
+      key:'新纪元商务章节登场——头衔有限，作用不小。' },
+    { id:'teluoyi', role:'联邦成员', tag:'建设年代的参与者之一。',
+      works:'联邦成员。',
+      key:'出现在本作的建设章节中。' },
+    { id:'malachite', role:'云屏科技大学创办人', tag:'她是被写得最真实的那个人——因为她的功绩，从来不需要虚构。',
+      works:'创办云屏科技大学——新移民自己的大学，昵称「云科大校长妹」。校训：「和光同尘，与时舒卷。」这所学校，是照着战争的反面设计的：没有教学楼，没有中心图书馆，建筑无中心地散布，夺无可夺；学生与教师的住宿、席位、投票权完全相同，校长只是管杂务的 Admin，大事全校公投；校内 AI「Media」讲授全部课程，在校议会里有一票——也只有一票。学位是树形前置：无年限，无本科与研究生之分，考试随时可考。没有这所学校，新移民就没有自己的学术、没有自己的上升通道，只能永远借住在前辈的屋檐下。她给新移民的不是一栋楼，是一套让他们不再是客人的制度。',
+      key:'战争的冬天，她动用杂务权限，绕过校议会，把全校锁进「冬令时」：温度 23 度以上，日落之后亮如白昼，公共区域的灯亮到天明。通告的最后一句是：「请保持在线。这个冬天，不要再有人离开我们。」而在落成那天，她站在新楼前问总统：「楼盖起来了，人从哪来？」——这个问题，开启了本作关于「先被看见，还是先安顿」的整条线。她的问题，比她的建筑活得更久。' }
+  ];
+  var BIOS_EXTRA = [
+    { name:'卡特尔', text:'联邦大将军，年轻将领。' },
+    { name:'苏半夏', text:'护照设计师，联邦的护照出自她的设计。' },
+    { name:'雨辰', text:'环球外交官，联邦的对外面孔之一。' }
+  ];
+  var INTROS = {
+    E06:'菲尔南德——建国元老，地位与雪仙等同。车长——南十字星功臣，军中威望最高的人。',
+    E14:'玉米——建国功臣。这个国家的铁路和公路，都是他和菲尔南德修的。',
+    E21:'咖喱——新移民一代的领袖，如今站在冲突的第一线。',
+    E28:'凯瑟琳奈——受邀而来的外部顾问，专程为联邦的商务而来。',
+    E31:'立言——建设家。离开过的人里，他的名字被念得最多。',
+    I03:'戈梦——行政院长，联邦的中轴。',
+    I06:'Malachite——云屏科技大学的创办人。新移民自己的大学，出自她手。',
+    I10:'特洛伊——联邦成员，建设年代的参与者。',
+    I12:'小诺——新生代成员，在旧故事里长大的一代。',
+    I14:'猫猫——猫滨城城主，东海岸的灯塔看守人。'
+  };
+  function introHtml(id){
+    var t = INTROS[id]; if (!t) return '';
+    return '<div class="introline">' + esc(t) + '</div>';
+  }
+  function renderDex(){
+    phase = 'dex';
+    var h = '<div class="screen"><div class="evtitle center" style="margin-top:10px;">人物图鉴</div>' +
+      '<p class="small center">给第一次来到星空合众国的人：他们是谁，为什么重要。</p>';
+    BIOS.forEach(function(b){
+      h += '<div class="card dexcard">' + portraitsHtml([b.id]) +
+        '<div class="dexname">' + esc(PNAMES[b.id] || b.id) + '</div>' +
+        '<div class="dexrole">' + esc(b.role) + '</div>' +
+        '<p class="dextag">「' + esc(b.tag) + '」</p>' +
+        '<p><b>来历与代表作</b>　' + esc(b.works) + '</p>' +
+        '<p><b>在本作中</b>　' + esc(b.key) + '</p></div>';
+    });
+    h += '<div class="card"><div class="dexname">同时代的其他人</div><p class="small">本作未登场，先记下名字：</p>';
+    BIOS_EXTRA.forEach(function(x){ h += '<p><b>' + esc(x.name) + '</b>　' + esc(x.text) + '</p>'; });
+    h += '</div><button class="btn primary" id="btnDexBack">返回</button></div>';
+    screen.innerHTML = h;
+    window.scrollTo(0,0);
+    document.getElementById('btnDexBack').onclick = function(){ renderTitle(); };
+  }
+
+  /* ---------- 实物图片解析（与 portraitsHtml 同规则） ---------- */
+  function archSrc(id){ return 'img/' + id + '.webp'; }
+  var ARCHIVE = [
+    { id:'archive-map', name:'全国地图', text:'首都高川在西南，副首都云屏在西北。地图最西边那座孤悬海外的小岛，是白沙屿。' },
+    { id:'archive-online', name:'一砖一瓦 · 线上篇', text:'本土设定全图：53.5 万平方公里、18 座城市，一座本岛与数个离岛。' },
+    { id:'archive-stations', name:'星光铁路站牌', text:'十九块站牌，全是实物。玉米和菲尔南德打下的交通底子，后来被一块一块做出来，挂在墙上。' },
+    { id:'archive-passport', name:'联邦护照卡（范例）', text:'由护照设计师苏半夏设计。性别自我认定一栏，写的是「十三年蝉」——这个国家对身份的态度，全在这四个字里。' },
+    { id:'archive-resonance', name:'共鸣协会', text:'成功收发一次信件，记为一次共鸣。东京—福冈—天津—长春—湖州—河南：人不一定回来，但信一直在路上。' },
+    { id:'archive-postcards', name:'真实寄出的明信片', text:'云屏海畔、九州办事处、联邦成立纪念。这个国家的信件文化，从屏幕走进了邮筒。' },
+    { id:'archive-gift', name:'年终贺礼', text:'执政官的年终贺礼：手写卡片、花朵书签，和一个橘子。「感谢大家在本年度内的辛苦付出。」' },
+    { id:'archive-offline', name:'一砖一瓦 · 线下篇', text:'线下办公室开到了天津、东京、九州、湖州、河南、广州、印尼、长春和悉尼。少时两三人，多时十数人——是入境据点，也是居民的避风港。' },
+    { id:'archive-hoshika', name:'星歌卡', text:'星光铁路公司的纪念卡。卡片准则最后一句：「本卡不涉及任何地球实际事务，欢迎加入科幻社群。」' },
+    { id:'archive-yunkeda', name:'云屏科技大学 · 校门', text:'出自 Malachite 的《云屏科技大学设定集》。校训：「和光同尘，与时舒卷。」这所学校没有教学楼，没有中心图书馆——没有中心，也就没有可以夺取的中心。' },
+    { id:'archive-media', name:'Media · 云屏科技大学的 AI', text:'云科大的 AI「Media」：它讲授全部课程、安排考试，在校议会里有一席投票权——但也只有一席。它是介质，不是主人。' },
+    { id:'archive-gaochuan', name:'高川 · 首都全图', text:'菲尔南德的代表作。清江穿城而过，环线层层叠着放射线，几百个站名各有出处。这不是画出来的密度，是十年住出来的密度。新移民拆了旧城重建，却复制不出这张图——线条能临摹，转弯背后的理由临摹不出来。首都几经迁徙，最后还是回了高川。' },
+    { id:'archive-satellite', name:'高川卫星城全图', text:'同出菲尔南德之手：四条轨道线、潟湖、大学城——它本身已是一座完整的城市。只是和高川并排放在一起，才看得懂什么叫「一张图」和「一部史」的区别。' },
+    { id:'archive-northnet', name:'北部城市轨道交通网（原版）', text:'雪仙与新移民合画的北部五城轨道网：高北、新高北、芦竹、云屏、天祥。干净、清晰，是一张好图——但它只有北部。南部没有出现在他们的任何一张图上：没有菲尔南德，就没有南部。这一张是原版，后来菲尔南德又改过一些。' }
+  ];
+  var ENDART = {
+    baisha:{ id:'archive-map', text:'真实的联邦全国地图——白沙屿在最西边。' },
+    changming:{ id:'archive-resonance', text:'现实里的留灯，叫共鸣。' },
+    tongguan:{ id:'archive-offline', text:'而在现实里，这个国家一直都在。' }
+  };
+  function archBlock(a){
+    return '<div class="archwrap"><img class="archimg" src="' + archSrc(a.id) + '" alt="' + esc(a.name) + '" onerror="this.parentNode.style.display=\'none\'"></div>' +
+      '<p class="archname">' + esc(a.name) + '</p><p class="small">' + esc(a.text) + '</p>';
+  }
+  function renderArchive(){
+    phase = 'archive';
+    var h = '<div class="screen"><div class="evtitle center" style="margin-top:10px;">联邦实物档案</div>' +
+      '<p class="small center">以下均为这个共同体真实存在过的实物。</p>';
+    ARCHIVE.forEach(function(a){ h += '<div class="card">' + archBlock(a) + '</div>'; });
+    h += '<button class="btn primary" id="btnArchBack">返回</button></div>';
+    screen.innerHTML = h;
+    window.scrollTo(0,0);
+    document.getElementById('btnArchBack').onclick = function(){ renderTitle(); };
+  }
+  var GUIDE = [
+    { t:'这是什么', b:'「星空合众国」是一个真实存在了九年的线上共同体。这款游戏改编自它的编年史：你扮演总统雪仙，重演 2023 年 2 月到 2024 年 6 月——政变、建设、五次「前新战争」与新纪元。人物用成员代号（他们早已改名，与现实无对应），事件全部出自真实历史。' },
+    { t:'怎么玩', b:'读事件，做选择。每道题三个选项，没有标准答案。标着「史实」的，是当年真实发生过的选择——但史实≠正确，它有时是最痛的那条路。事件发生时，数值会先受冲击；你的回应，决定能不能把损失挣回来。还有一条规矩：没有回头路。选了就是选了，进度自动保存，没有撤销键——现实中的总统也一样：驱逐令签下去，人就真的走了；首都解散了，就真的空了。但现实只有一条历史，这款游戏给了你 17 个结局：一局走完，可以再来一局，换一条路，看看这个国家另一种活法。' },
+    { t:'看哪些数值', b:'民心——人心向背，归零就是真亡国。国库——这个国家的经济压力：花钱的选项需要本钱，不够时会灰掉。安全／外交——军备与邦交。前辈满意度⇄新移民融合度——这个国家永恒的拉扯，只顾一头，另一头就会散。公正度（隐藏）——你每一次裁决，都记在账上。' },
+    { t:'结局', b:'共 17 个。从「白沙草屿」（真实历史走出的和解）到「真亡国」。打出好结局、且前辈们没有散尽时，结尾会多一段「后记 · 真实世界的后来」。' },
+    { t:'几个词', b:'前辈——建国一代与老成员。新移民——2023 年后大量涌入的新成员。老成员与他们之间最初的裂痕，来自一些谁一开始都没当回事的小事。留灯——不强留要走的人，在门口留一盏灯，等他们自己回来。亡国危机——这个国家九年里经历过十三次存亡关头，本作是其中最险的几次。' },
+    { t:'另外两件展品', b:'人物图鉴——先看玉米和菲尔南德，再开始玩也不迟。联邦实物档案——这个国家真实存在的地图、护照、明信片与车站牌。它不只活在屏幕里。' },
+    { t:'一句话攻略', b:'这个国家的题，从来不是「打赢谁」，而是「怎么把人留住」。' }
+  ];
+  function renderGuide(){
+    phase = 'guide';
+    var h = '<div class="screen"><div class="evtitle center" style="margin-top:10px;">新手指南 · 三分钟看懂</div>';
+    GUIDE.forEach(function(g){
+      h += '<div class="card"><p><b>' + esc(g.t) + '</b></p><p>' + esc(g.b) + '</p></div>';
+    });
+    h += '<button class="btn primary" id="btnGuideBack">返回</button></div>';
+    screen.innerHTML = h;
+    window.scrollTo(0,0);
+    document.getElementById('btnGuideBack').onclick = function(){ renderTitle(); };
+  }
+  function portraitsHtml(ids){
+    if (!ids || !ids.length) return '';
+    var h = '<div class="portraits' + (ids.length === 1 ? ' single' : '') + '">';
+    ids.forEach(function(id){
+      h += '<div class="pwrap"><img class="pimg" src="img/portrait-' + id + '.webp" alt="' + esc(PNAMES[id] || '') +
+           '" onerror="this.parentNode.style.display=\'none\'"><div class="pname">' + esc(PNAMES[id] || '') + '</div></div>';
+    });
+    return h + '</div>';
+  }
+  /* 国旗：蓝底＋一颗金色四角星（内联 SVG） */
+  function flagSVG(w){
+    var h = Math.round(w * 2 / 3);
+    return '<svg class="flag" width="' + w + '" height="' + h + '" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" aria-label="星空合众国国旗">' +
+      '<rect width="60" height="40" fill="#1447a8"/>' +
+      '<polygon fill="#f5c542" points="30,9 33.2,16.8 41,20 33.2,23.2 30,31 26.8,23.2 19,20 26.8,16.8"/></svg>';
+  }
+
+  /* ---------- HUD ---------- */
+  function renderHud(){
+    if (!state || phase === 'title' || phase === 'style'){ hud.style.display = 'none'; return; }
+    hud.style.display = 'block';
+    var s = state.stats;
+    function row(lab, key, cls){
+      return '<div class="row"><span class="lab">' + lab + '</span><div class="bar ' + (cls||'') + '"><i style="width:' + s[key] + '%"></i></div><span class="val">' + s[key] + '</span></div>';
+    }
+    var ptr = Math.max(3, Math.min(97, 50 + (s.qb - s.rh) / 2));
+    hud.innerHTML =
+      row('民心','mx') + row('国库','gk') + row('安全','aq','blue') + row('外交','wj','blue') +
+      '<div id="tug"><div class="ends"><span><img class="flagmark" src="img/flag-veterans.jpg" alt="" onerror="this.style.display=\'none\'">前辈满意度 <b>' + s.qb + '</b></span><span><b>' + s.rh + '</b> 新移民融合度</span></div>' +
+      '<div class="tugtrack"><div id="tugptr" style="left:' + ptr + '%"></div></div></div>';
+  }
+
+  /* ---------- 标题页 ---------- */
+  function renderTitle(){
+    phase = 'title'; renderHud();
+    var sv = load();
+    var has = sv && sv.state && !sv.state.finished;
+    var html = '<div class="screen">' +
+      '<div class="hero"><img class="still" src="img/title-painting.jpg" alt="标题画：老者持蓝底金星旗立于林间">' +
+      '<video autoplay muted loop playsinline poster="img/title-painting.jpg" src="img/title-painting-anim.mp4"></video>' +
+      '<div class="grad"></div></div>' +
+      '<h1 class="title">再起群星</h1>' +
+      '<div class="flagrow">' + flagSVG(46) + '<span class="fname">星 空 合 众 国 · S S F</span></div>' +
+      '<div class="subtitle" style="margin-top:10px;">星 空 合 众 国 编 年 史</div>' +
+      '<div class="card">' + portraitsHtml(['xuexian']) + '<p>2023 年 2 月到 2024 年 6 月。十七个月里，一个从聊天群里长出来的国家，经历了建制、联盟、政变、五次内战与重生。</p>' +
+      '<p>这一次，你就是雪仙——它的领袖。每一个决定都由你来下：罢免之夜如何抉择，镇压面前是否号召民众，老臣与新移民之间那杆秤，要往哪边倾斜。</p>' +
+      '<p>没有错误的选项，只有不同的选择。但每一个选择，都有它的代价，且不可撤销——现实中的总统，没有回头路。</p>' +
+      '<p class="small">本游戏改编自《星空合众国（微国家时代）简史》与小说《星空礼品店》。一局约 15–20 分钟，进度自动保存。</p><p class="small">背景音乐：庆典微电影《乡音无改》原声（威力导演会员音乐库）。星空合众国国歌《再起群星》，旋律源自 Audiomachine《Sol Invictus》。</p><p class="small">原作小说《星空礼品店》连载于 <a href="https://www.pixiv.net/users/119793912" target="_blank" rel="noopener" style="color:#d8b25c;text-decoration:underline;">Pixiv · 作者主页</a>。</p></div>';
+    if (has) html += '<button class="btn primary" id="btnContinue">继续游戏</button>';
+    html += '<button class="btn ' + (has ? 'ghost' : 'primary') + '" id="btnStart">' + (has ? '重新开始' : '开始游戏') + '</button><button class="btn ghost" id="btnDex">人物图鉴</button><button class="btn ghost" id="btnGuide">新手指南</button><button class="btn ghost" id="btnArchive">联邦实物档案</button></div>';
+    screen.innerHTML = html;
+    /* 标题画优雅降级：静态图与视频都不可用时整块隐藏 */
+    var hero = screen.querySelector('.hero');
+    if (hero){
+      var hi = hero.querySelector('img.still'), hv = hero.querySelector('video'), imgDead = false, vidDead = false;
+      var maybeHide = function(){ if (imgDead && vidDead) hero.style.display = 'none'; };
+      if (hi){
+        if (hi.complete && hi.naturalWidth === 0){ imgDead = true; hi.style.display = 'none'; }
+        hi.onerror = function(){ imgDead = true; hi.style.display = 'none'; maybeHide(); };
+      }
+      if (hv) hv.onerror = function(){ vidDead = true; hv.style.display = 'none'; maybeHide(); };
+      maybeHide();
+    }
+    var bc = document.getElementById('btnContinue');
+    if (bc) bc.onclick = function(){
+      var s2 = load(); if (!s2) return renderTitle();
+      state = s2.state; lastOutcome = s2.lastOutcome || null;
+      if (s2.phase === 'result' && lastOutcome) renderResult();
+      else if (s2.phase === 'ending') renderEnding();
+      else renderNode();
+    };
+    document.getElementById('btnStart').onclick = function(){
+      clearSave(); state = null; lastOutcome = null; renderStyle();
+    };
+    var bd = document.getElementById('btnDex');
+    if (bd) bd.onclick = function(){ renderDex(); };
+    var bgd = document.getElementById('btnGuide');
+    if (bgd) bgd.onclick = function(){ renderGuide(); };
+    var bar = document.getElementById('btnArchive');
+    if (bar) bar.onclick = function(){ renderArchive(); };
+  }
+
+  /* ---------- 选风格 ---------- */
+  function renderStyle(){
+    phase = 'style'; renderHud();
+    var html = '<div class="screen"><div class="evtitle center" style="margin-top:10px;">选择你的执政风格</div>' +
+      '<p class="center small" style="margin-bottom:18px;">风格只影响初始数值与少量判定，不锁死任何结局。</p>';
+    for (var k in SSF.STYLES){
+      var stl = SSF.STYLES[k];
+      html += '<button class="btn stylebtn" data-style="' + k + '"><b class="gold">' + esc(stl.name) + '</b><span class="sub">' + esc(stl.desc) + '</span></button>';
+    }
+    html += '</div>';
+    screen.innerHTML = html;
+    var btns = screen.querySelectorAll('.stylebtn');
+    for (var i=0;i<btns.length;i++) btns[i].onclick = function(){
+      state = SSF.newState(this.getAttribute('data-style'));
+      lastOutcome = null; phase = 'node'; save(); renderNode();
+    };
+  }
+
+  /* ---------- 游戏节点 ---------- */
+  function renderNode(){
+    phase = 'node';
+    var node = SSF.enterNode(state);
+    renderHud(); save();
+    if (!node || state.finished){ renderEnding(); return; }
+    if (node.kind === 'chapter'){
+      var note = state.pendingNote ? '<div class="note">' + esc(state.pendingNote).replace(/\n/g,'<br>') + '</div>' : '';
+      var dt = deltaChips(state._tickDeltas);
+      var flags = (node.ch === 5) ?
+        '<div class="chapterflags"><figure>' + flagSVG(120) + '<figcaption>星空合众国 · 国旗</figcaption></figure>' +
+        '<figure><img src="img/flag-veterans.jpg" alt="前辈旗" onerror="this.parentNode.style.display=\'none\'"><figcaption>前辈 · 旧旗</figcaption></figure></div>' : '';
+      screen.innerHTML = '<div class="screen"><span class="chntag">' + esc(node.date) + '</span>' +
+        '<div class="evtitle">' + esc(node.title) + '</div>' + flags + '<div class="card">' + paras(node.body) + note + dt + '</div>' +
+        '<button class="btn primary" id="btnNext">进入本章</button></div>';
+      document.getElementById('btnNext').onclick = function(){ SSF.leaveNode(state); afterAdvance(); };
+    } else if (node.kind === 'interlude'){
+      var dt2 = deltaChips(state._tickDeltas);
+      screen.innerHTML = '<div class="screen">' + portraitsHtml(PORTRAITS[node.id]) + introHtml(node.id) + '<span class="chntag intertag">编年史</span>' +
+        '<div class="evdate">' + esc(node.date) + '</div><div class="evtitle">' + esc(node.title) + '</div>' +
+        '<div class="card"><p>' + esc(node.text) + '</p>' + dt2 + '</div>' +
+        '<button class="btn primary" id="btnNext">继续</button></div>';
+      document.getElementById('btnNext').onclick = function(){ SSF.leaveNode(state); afterAdvance(); };
+    } else {
+      renderEvent(node);
+    }
+  }
+
+  function afterAdvance(){
+    save();
+    if (state.finished) renderEnding(); else renderNode();
+  }
+
+  function deltaChips(deltas){
+    if (!deltas) return '';
+    var keys = Object.keys(deltas);
+    if (!keys.length) return '';
+    var html = '<div class="deltas">';
+    keys.forEach(function(k){
+      var v = deltas[k];
+      html += '<span class="dchip ' + (v > 0 ? 'up' : 'down') + '">' + SSF.STATLAB[k] + ' ' + (v > 0 ? '+' : '') + v + '</span>';
+    });
+    return html + '</div>';
+  }
+
+  function renderEvent(ev){
+    var body = ev.body;
+    if (ev.bodyAlt && state.flags[ev.bodyAlt.flag]) body = ev.bodyAlt.paras;
+    var note = state.pendingNote ? '<div class="note">' + esc(state.pendingNote).replace(/\n/g,'<br>') + '</div>' : '';
+    var dt = deltaChips(state._tickDeltas);
+    var html = '<div class="screen">' + portraitsHtml(PORTRAITS[ev.id]) + introHtml(ev.id) + '<div class="evdate">' + esc(ev.date) + '</div>' +
+      '<div class="evtitle">' + esc(ev.title) + '</div>' +
+      '<div class="card">' + paras(body) + note + dt + '</div>';
+    ev.choices.forEach(function(c, i){
+      var en = SSF.choiceEnabled(state, ev, i);
+      html += '<button class="btn choice" data-i="' + i + '"' + (en ? '' : ' disabled') + '>' + esc(c.label);
+      if (!en && c.reqLabel) html += '<span class="req">' + esc(c.reqLabel) + '</span>';
+      html += '</button>';
+    });
+    html += '</div>';
+    screen.innerHTML = html;
+    var btns = screen.querySelectorAll('.choice');
+    for (var i=0;i<btns.length;i++) btns[i].onclick = function(){
+      var ci = parseInt(this.getAttribute('data-i'), 10);
+      var out = SSF.choose(state, ci);
+      if (!out) return;
+      lastOutcome = out; phase = 'result'; save(); renderResult();
+    };
+  }
+
+  /* ---------- 结果页 ---------- */
+  function renderResult(){
+    phase = 'result'; renderHud();
+    var o = lastOutcome;
+    if (!o){ renderNode(); return; }
+    var html = '<div class="screen"><div class="evdate">' + esc(o.evDate) + '</div>' +
+      '<div class="evtitle">' + esc(o.evTitle) + (o.hist ? ' <span class="histmark">· 史实 ·</span>' : '') + '</div>' +
+      '<div class="card">' + paras(o.text.split('\n\n')) + deltaChips(o.deltas) +
+      (o.bankrupt ? '<div class="note">国库已经见底，这笔开支拖累了民心（-3）。寅吃卯粮的日子，撑不了太久。</div>' : '') +
+      '</div>' +
+      '<button class="btn primary" id="btnNext">' + (state.finished ? '查看结局' : '继续') + '</button></div>';
+    screen.innerHTML = html;
+    document.getElementById('btnNext').onclick = function(){
+      if (state.finished) renderEnding(); else renderNode();
+    };
+  }
+
+  /* ---------- 结局页 ---------- */
+  function renderEnding(){
+    phase = 'ending'; renderHud(); save();
+    var e = SSF.buildEnding(state);
+    var isBaisha = (e.id === 'baisha');
+    var html = '<div class="screen">' + (isBaisha ? '<div class="endwrap"><div class="bgimg"></div><div class="inner">' : '') +
+      '<div class="endtitle">' + esc(e.title) + '</div><div class="endsub">' + esc(e.sub) + '</div>' +
+      '<div class="flagrow">' + flagSVG(52) + '</div>' +
+      '<div class="score"><div class="num">' + e.score + '</div><div class="lab">国 运 评 分</div></div>' +
+      '<div class="card"><p>' + esc(e.desc) + '</p></div>';
+    var ea = ENDART[e.id];
+    if (ea) html += '<div class="card"><div class="archwrap"><img class="archimg" src="' + archSrc(ea.id) + '" alt="" onerror="this.parentNode.parentNode.style.display=\'none\'"></div><p class="small center">' + esc(ea.text) + '</p></div>';
+    html += '<div class="secttl">你的选择 · 与真实历史</div>';
+    e.comparison.forEach(function(c){
+      html += '<div class="cmp"><div class="ch">' + esc(c.ch) + ' · ' + esc(c.evTitle) + '</div>' +
+        '<div class="you">你：' + esc(c.you) + (c.isHist ? ' <span class="histmark">· 史实 ·</span>' : '') + '</div>' +
+        '<div class="hist">史实：' + esc(c.hist || '（无记录）') + '</div></div>';
+    });
+    html += '<div class="secttl">人物结局</div>';
+    e.fates.forEach(function(f){
+      html += '<div class="fate"><b>' + esc(f.name) + '</b>：' + esc(f.text) + '</div>';
+    });
+    html += '<div id="tipbox"><div class="tiplab">本游戏免费游玩。如果你真心喜欢这个故事，或者想支持作者，欢迎赞赏。</div><img id="tipimg" alt="赞赏"></div>';
+    html += '<div class="small" style="text-align:center;margin-top:20px;line-height:2;">背景音乐：《乡音无改》庆典微电影原声（威力导演会员音乐库）<br>星空合众国国歌《再起群星》 · 旋律源自 Audiomachine《Sol Invictus》<br>鸣谢全体星空合众国居民，以及离开却永不被忘记的——建设家<br>也谢谢每一位不是星空居民、却愿意走进这个故事里来的你——这个国家的大门，一直为愿意停留的人留着灯。<br>原作小说《星空礼品店》连载于 <a href="https://www.pixiv.net/users/119793912" target="_blank" rel="noopener" style="color:#d8b25c;text-decoration:underline;">Pixiv · 作者主页</a></div>';
+    html += '<button class="btn primary" id="btnAgain" style="margin-top:20px;">再来一局</button>' +
+            '<button class="btn ghost" id="btnHome">回到标题</button>' + (isBaisha ? '</div></div>' : '') + '</div>';
+    screen.innerHTML = html;
+    var img = document.getElementById('tipimg');
+    var box = document.getElementById('tipbox');
+    img.src = (window.SSF_IMG && window.SSF_IMG['tip-art']) || 'img/tip-art.jpg';
+    img.onload = function(){ box.style.display = 'block'; };
+    img.onerror = function(){ box.style.display = 'none'; box.remove(); };
+    document.getElementById('btnAgain').onclick = function(){ clearSave(); state = null; lastOutcome = null; renderStyle(); };
+    document.getElementById('btnHome').onclick = function(){ renderTitle(); };
+  }
+
+  renderTitle();
+})();
+</script>
+
+<audio id="bgm" src="img/bgm-film.mp3" loop preload="auto"></audio>
+<button id="bgmBtn" type="button" aria-label="背景音乐开关">♪</button>
+<script>
+(function(){
+  var bgm = document.getElementById('bgm');
+  var btn = document.getElementById('bgmBtn');
+  if (!bgm || !btn) return;
+  var want = true;
+  try { want = localStorage.getItem('ssf-bgm') !== 'off'; } catch(e){}
+  function paint(){ btn.className = want ? '' : 'off'; }
+  function tryPlay(){ if (want && bgm.paused){ var pr = bgm.play(); if (pr && pr.catch) pr.catch(function(){}); } }
+  document.addEventListener('pointerdown', tryPlay, true);
+  document.addEventListener('keydown', tryPlay, true);
+  btn.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    want = !want;
+    try { localStorage.setItem('ssf-bgm', want ? 'on' : 'off'); } catch(e){}
+    if (want) tryPlay(); else bgm.pause();
+    paint();
+  });
+  bgm.addEventListener('error', function(){ btn.style.display = 'none'; });
+  paint();
+})();
+</script>
+<!-- SSF-FX-MODULE v1 : synthesized SFX + fireworks/confetti -->
+<style>
+#fxCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:55}
+#fxBtn{position:fixed;right:12px;z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid rgba(240,200,90,.55);background:rgba(10,16,34,.72);color:#f0c85a;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+#fxBtn{bottom:calc(68px + env(safe-area-inset-bottom))}
+#fxBtn.off{opacity:.45}
+#fxBtn.off::after{content:'';position:absolute;left:7px;right:7px;top:50%;height:2px;margin-top:-1px;background:#f0c85a;transform:rotate(-45deg)}
+@keyframes ssfShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-7px,3px)}30%{transform:translate(6px,-4px)}45%{transform:translate(-5px,-2px)}60%{transform:translate(4px,3px)}75%{transform:translate(-3px,1px)}}
+.ssf-shake{animation:ssfShake .55s ease-in-out}
+</style>
+<script>
+(function(){
+  'use strict';
+  var screenEl = document.getElementById('screen');
+  if (!screenEl) return;
+  var fxOn = true;
+  try { fxOn = localStorage.getItem('ssf-fx') !== 'off'; } catch(e){}
+
+  /* ---------- toggle buttons ---------- */
+  function mkBtn(id, label, on){
+    var b = document.createElement('button');
+    b.id = id; b.type = 'button'; b.textContent = label; b.setAttribute('aria-label', label);
+    if (!on) b.className = 'off';
+    document.body.appendChild(b);
+    return b;
+  }
+  var fBtn = mkBtn('fxBtn', '🎆', fxOn);
+  fBtn.onclick = function(){
+    fxOn = !fxOn;
+    try { localStorage.setItem('ssf-fx', fxOn ? 'on' : 'off'); } catch(e){}
+    fBtn.className = fxOn ? '' : 'off';
+    if (fxOn) { fireworks(); chime(); }
+  };
+
+  /* ---------- synthesized SFX (WebAudio, no audio files) ---------- */
+  var AC = null;
+  function ac(){
+    if (!AC){ try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ AC = null; } }
+    if (AC && AC.state === 'suspended') AC.resume();
+    return AC;
+  }
+  document.addEventListener('pointerdown', function(){ if (fxOn) ac(); }, true);
+  function noiseBuf(dur){
+    var c = ac(); if (!c) return null;
+    var b = c.createBuffer(1, Math.max(1, Math.ceil(c.sampleRate * dur)), c.sampleRate);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    return b;
+  }
+  function shake(){
+    var app = document.getElementById('app'); if (!app) return;
+    app.classList.remove('ssf-shake'); void app.offsetWidth;
+    app.classList.add('ssf-shake');
+    setTimeout(function(){ app.classList.remove('ssf-shake'); }, 600);
+  }
+  function boom(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    var buf = noiseBuf(1.0); if (!buf) return;
+    var src = c.createBufferSource(); src.buffer = buf;
+    var f = c.createBiquadFilter(); f.type = 'lowpass';
+    f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(60, t + 0.9);
+    var g = c.createGain();
+    g.gain.setValueAtTime(0.85, t); g.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
+    src.connect(f); f.connect(g); g.connect(c.destination); src.start(t); src.stop(t + 1.05);
+    var o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(32, t + 0.8);
+    var g2 = c.createGain();
+    g2.gain.setValueAtTime(0.75, t); g2.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+    o.connect(g2); g2.connect(c.destination); o.start(t); o.stop(t + 0.95);
+    shake();
+  }
+  function shots(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    for (var i = 0; i < 4; i++){
+      var st = t + i * 0.15 + Math.random() * 0.03;
+      var buf = noiseBuf(0.09); if (!buf) return;
+      var src = c.createBufferSource(); src.buffer = buf;
+      var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 0.8;
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.45, st); g.gain.exponentialRampToValueAtTime(0.001, st + 0.09);
+      src.connect(f); f.connect(g); g.connect(c.destination); src.start(st); src.stop(st + 0.1);
+    }
+  }
+  function drum(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    [0, 0.32, 0.60, 0.84, 1.04, 1.20].forEach(function(h){
+      var st = t + h;
+      var o = c.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(110, st); o.frequency.exponentialRampToValueAtTime(55, st + 0.16);
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.5, st); g.gain.exponentialRampToValueAtTime(0.001, st + 0.2);
+      o.connect(g); g.connect(c.destination); o.start(st); o.stop(st + 0.22);
+    });
+  }
+  function tone(freq, st, dur, type, vol){
+    var c = ac(); if (!c) return;
+    var o = c.createOscillator(); o.type = type || 'sine'; o.frequency.value = freq;
+    var g = c.createGain();
+    g.gain.setValueAtTime(0.0001, st);
+    g.gain.exponentialRampToValueAtTime(vol || 0.2, st + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.001, st + dur);
+    o.connect(g); g.connect(c.destination); o.start(st); o.stop(st + dur + 0.05);
+  }
+  function chime(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function(fr, i){ tone(fr, t + i * 0.13, 0.7, 'triangle', 0.18); });
+  }
+  function fanfare(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    [392, 523.25, 659.25].forEach(function(fr, i){ tone(fr, t + i * 0.11, 0.35, 'sawtooth', 0.09); });
+    tone(783.99, t + 0.34, 0.8, 'sawtooth', 0.11);
+    tone(1046.5, t + 0.34, 0.8, 'triangle', 0.14);
+  }
+  function cheer(){
+    var c = ac(); if (!c) return; var t = c.currentTime;
+    var buf = noiseBuf(1.5); if (!buf) return;
+    var src = c.createBufferSource(); src.buffer = buf; src.loop = true;
+    var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 0.6;
+    var g = c.createGain(); g.gain.setValueAtTime(0.0001, t);
+    for (var i = 0; i < 10; i++) g.gain.linearRampToValueAtTime(0.08 + Math.random() * 0.09, t + 0.14 * (i + 1));
+    g.gain.linearRampToValueAtTime(0.0001, t + 1.5);
+    src.connect(f); f.connect(g); g.connect(c.destination); src.start(t); src.stop(t + 1.55);
+  }
+
+  /* ---------- fireworks & confetti (canvas) ---------- */
+  var cv = document.createElement('canvas'); cv.id = 'fxCanvas'; document.body.appendChild(cv);
+  var ctx = cv.getContext('2d');
+  var parts = [], rafId = null, fxUntil = 0;
+  var COLORS = ['#f0c85a', '#7db4ff', '#ff8fb2', '#9fe8b1', '#ffffff', '#c9a7ff'];
+  function sizeCv(){ cv.width = window.innerWidth; cv.height = window.innerHeight; }
+  window.addEventListener('resize', sizeCv); sizeCv();
+  function loop(){
+    var now = performance.now();
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(function(p){ return now < p.die; });
+    parts.forEach(function(p){
+      if (p.type === 'spark'){
+        p.x += p.vx; p.y += p.vy; p.vy += 0.045;
+        ctx.globalAlpha = Math.max(0, 1 - (now - p.born) / (p.die - p.born));
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.1, 0, 7); ctx.fill();
+      } else {
+        p.x += p.vx + Math.sin((now + p.seed) / 160) * 0.7; p.y += p.vy; p.rot += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.min(1, (p.die - now) / 600);
+        ctx.fillStyle = p.color; ctx.fillRect(-4, -2.5, 8, 5);
+        ctx.restore();
+      }
+    });
+    ctx.globalAlpha = 1;
+    if (parts.length && now < fxUntil + 3500) rafId = requestAnimationFrame(loop);
+    else { rafId = null; ctx.clearRect(0, 0, cv.width, cv.height); }
+  }
+  function startLoop(){ if (!rafId) rafId = requestAnimationFrame(loop); }
+  function fireworks(){
+    fxUntil = performance.now() + 2600;
+    for (var b = 0; b < 6; b++){
+      (function(bi){
+        setTimeout(function(){
+          var x = cv.width * (0.15 + Math.random() * 0.7), y = cv.height * (0.15 + Math.random() * 0.3);
+          var col = COLORS[bi % COLORS.length];
+          for (var i = 0; i < 46; i++){
+            var ang = (i / 46) * Math.PI * 2 + Math.random() * 0.2, sp = 1.6 + Math.random() * 2.6;
+            parts.push({type:'spark', x:x, y:y, vx:Math.cos(ang) * sp, vy:Math.sin(ang) * sp,
+              color: Math.random() < 0.3 ? '#ffffff' : col, born: performance.now(), die: performance.now() + 1100 + Math.random() * 500});
+          }
+          startLoop();
+        }, bi * 380);
+      })(b);
+    }
+  }
+  function confetti(){
+    var now = performance.now(); fxUntil = now + 3000;
+    for (var i = 0; i < 110; i++){
+      parts.push({type:'conf', x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * 0.35,
+        vx: (Math.random() - 0.5) * 0.7, vy: 1.4 + Math.random() * 1.8,
+        rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.25, seed: Math.random() * 1000,
+        color: COLORS[i % COLORS.length], born: now, die: now + 3400 + Math.random() * 800});
+    }
+    startLoop();
+  }
+
+  /* ---------- card watcher: trigger FX ---------- */
+  function cardText(){
+    var t = '';
+    var title = screenEl.querySelector('.evtitle, .endtitle');
+    if (title) t += title.innerText + '。';
+    var cards = screenEl.querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) t += ' ' + cards[i].innerText;
+    return t;
+  }
+  var lastKey = '';
+  function onCard(){
+    var txt = cardText();
+    if (!txt || !txt.trim()) return;
+    var key = txt.slice(0, 80);
+    if (key === lastKey) return;
+    lastKey = key;
+    if (!fxOn) return;
+    if (/爆破|爆炸|轰炸|首都陷落|攻破/.test(txt)){ boom(); if (/爆破|爆炸/.test(txt)) setTimeout(shots, 550); }
+    else if (/炮口|舰队|进攻|镇压|开战|宣战|战争/.test(txt)){ drum(); if (/炮|舰队/.test(txt)) setTimeout(shots, 700); }
+    else if (/晚会|庆典|周年|峰会|跨年|烟花|和解|白沙草屿/.test(txt)){ fireworks(); fanfare(); cheer(); }
+    else if (/明信片|一抢而空|粉丝/.test(txt)){ confetti(); chime(); }
+    else if (/回归|推翻|光复|胜利|重返执政/.test(txt)){ fanfare(); confetti(); }
+    else if (/离开过也没关系|星星会等你|留灯/.test(txt)){ chime(); }
+  }
+  var mo = new MutationObserver(function(){ setTimeout(onCard, 60); });
+  mo.observe(screenEl, {childList: true});
+})();
+</script>
+<!-- /SSF-FX-MODULE -->
+
+</body>
+</html>
