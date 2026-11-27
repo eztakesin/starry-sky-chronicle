@@ -2015,5 +2015,45 @@ if (typeof module !== 'undefined' && module.exports) module.exports = SSF;
 </script>
 <!-- /SSF-FX-MODULE -->
 
+
+<script>
+/* SSF-UPDATE-CHECK */
+(function(){
+  var MY_VER = '1.1';
+  var CHECK_URL = 'https://eztakesin.github.io/starry-sky-chronicle/version.json';
+  var DL_URL = 'https://github.com/eztakesin/starry-sky-chronicle/releases/latest';
+  function newer(a, b){
+    var pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+    for (var i = 0; i < Math.max(pa.length, pb.length); i++){
+      var x = pa[i] || 0, y = pb[i] || 0;
+      if (x > y) return true; if (x < y) return false;
+    }
+    return false;
+  }
+  function show(ver){
+    try { if (localStorage.getItem('ssf-update-dismissed') === ver) return; } catch(e){}
+    var bar = document.createElement('div');
+    bar.setAttribute('style', 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#12234d;color:#f3d98b;font-size:14px;padding:10px 40px 10px 14px;text-align:center;border-bottom:1px solid #f3d98b;box-shadow:0 2px 12px rgba(0,0,0,.5)');
+    var a = document.createElement('a');
+    a.href = DL_URL; a.target = '_blank'; a.rel = 'noopener';
+    a.setAttribute('style', 'color:#f3d98b;text-decoration:underline');
+    a.textContent = '\u2726 \u6709\u65b0\u7248\u672c v' + ver + ' \u53d1\u5e03\uff0c\u70b9\u6b64\u4e0b\u8f7d\u66f4\u65b0';
+    var x = document.createElement('span');
+    x.textContent = '\u2715';
+    x.setAttribute('style', 'position:absolute;right:10px;top:8px;cursor:pointer;color:#aebadd;padding:2px 6px');
+    x.onclick = function(){ try { localStorage.setItem('ssf-update-dismissed', ver); } catch(e){} if (bar.parentNode) bar.parentNode.removeChild(bar); };
+    bar.appendChild(a); bar.appendChild(x);
+    document.body.appendChild(bar);
+  }
+  try {
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var opt = { cache: 'no-store' };
+    if (ctrl) { opt.signal = ctrl.signal; setTimeout(function(){ ctrl.abort(); }, 5000); }
+    fetch(CHECK_URL, opt).then(function(r){ return r.json(); }).then(function(j){
+      if (j && j.latest && newer(j.latest, MY_VER)) show(String(j.latest));
+    }).catch(function(){});
+  } catch(e){}
+})();
+</script>
 </body>
 </html>
